@@ -10,6 +10,10 @@ const saveRecordButtons = document.querySelectorAll('[data-action="save-record"]
 const themeSelect = document.getElementById("themeSelect");
 const layoutSelect = document.getElementById("layoutSelect");
 const translationSelect = document.getElementById("translationSelect");
+const mobileNavToggle = document.getElementById("mobileNavToggle");
+const mobileNavPanel = document.getElementById("mobileNavPanel");
+const mobileNavBackdrop = document.getElementById("mobileNavBackdrop");
+const mobileNavClose = document.getElementById("mobileNavClose");
 const pageParams = new URLSearchParams(window.location.search);
 const previewRecordId = sanitizeRecordId(pageParams.get("recordId"));
 const isRecordPreviewMode = pageParams.get("view") === "preview" && Boolean(previewRecordId);
@@ -1979,6 +1983,35 @@ function enforceTemplateAccess(agency) {
   }
 }
 
+function setMobileNavOpen(isOpen) {
+  if (!mobileNavPanel || !mobileNavToggle) {
+    return;
+  }
+  mobileNavPanel.classList.toggle("is-open", isOpen);
+  mobileNavPanel.setAttribute("aria-hidden", isOpen ? "false" : "true");
+  mobileNavToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
+function initMobileNav() {
+  if (!mobileNavPanel || !mobileNavToggle || !mobileNavBackdrop || !mobileNavClose) {
+    return;
+  }
+  mobileNavToggle.addEventListener("click", () => {
+    const isOpen = mobileNavPanel.classList.contains("is-open");
+    setMobileNavOpen(!isOpen);
+  });
+  mobileNavBackdrop.addEventListener("click", () => setMobileNavOpen(false));
+  mobileNavClose.addEventListener("click", () => setMobileNavOpen(false));
+  mobileNavPanel.querySelectorAll("[data-action]").forEach((button) => {
+    button.addEventListener("click", () => setMobileNavOpen(false));
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setMobileNavOpen(false);
+    }
+  });
+}
+
 form.addEventListener("input", updateAll);
 form.addEventListener("change", updateAll);
 form.addEventListener("input", queueDraftSave);
@@ -2049,6 +2082,8 @@ logoutButtons.forEach((btn) => {
     window.location.href = "/landing";
   });
 });
+
+initMobileNav();
 
 if (themeSelect) {
   const savedTheme = localStorage.getItem("gcc_cv_theme") || "classic";

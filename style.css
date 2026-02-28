@@ -267,6 +267,21 @@ body[data-layout="compact"] .photo-card.full .photo-frame {
   flex-wrap: wrap;
 }
 
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  min-width: 210px;
+  background: linear-gradient(180deg, #2f5aa0, #244783);
+  border-color: #3d6294;
+  color: #fff;
+}
+
+.mobile-nav-sheet {
+  display: none;
+}
+
 .usage-chip {
   background: #eaf2ff;
   border: 1px solid #bfd4f5;
@@ -1778,6 +1793,111 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
     padding: 4mm;
   }
 
+  .header-right {
+    justify-items: center;
+    width: 100%;
+  }
+
+  .header-actions {
+    display: none;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+
+  .mobile-nav-sheet {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    pointer-events: none;
+  }
+
+  .mobile-nav-sheet.is-open {
+    pointer-events: auto;
+  }
+
+  .mobile-nav-backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(7, 15, 29, 0.48);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    box-shadow: none;
+  }
+
+  .mobile-nav-sheet.is-open .mobile-nav-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-nav-card {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    border: 1px solid #bfd0e7;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f9fcff, #eef4ff);
+    box-shadow: 0 22px 42px rgba(10, 24, 45, 0.32);
+    padding: 0.85rem;
+    transform: translateY(108%);
+    transition: transform 0.22s ease;
+  }
+
+  .mobile-nav-sheet.is-open .mobile-nav-card {
+    transform: translateY(0);
+  }
+
+  .mobile-nav-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .mobile-nav-head h2 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--brand-2);
+  }
+
+  .mobile-nav-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid #c6d5eb;
+    background: #fff;
+    color: #1e3f6b;
+    font-size: 1.1rem;
+    line-height: 1;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .mobile-nav-note {
+    margin: 0 0 0.55rem;
+    font-size: 0.82rem;
+    color: #4f6589;
+  }
+
+  .mobile-nav-grid {
+    display: grid;
+    gap: 0.48rem;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mobile-nav-grid button {
+    width: 100%;
+    box-shadow: 0 8px 18px rgba(20, 37, 68, 0.17);
+    padding: 0.55rem 0.72rem;
+    font-size: 0.86rem;
+  }
+
   .mid-layout {
     grid-template-columns: 1fr;
   }
@@ -1821,6 +1941,12 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
   .has-supporting-pages #passportPage .full-page-doc .doc-frame {
     height: 460px;
     min-height: 460px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .mobile-nav-grid {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -62,9 +62,31 @@
           <button type="button" data-action="print">Print / Save PDF</button>
           <button type="button" data-action="logout">Logout</button>
         </div>
+        <button type="button" class="mobile-nav-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="mobileNavPanel">
+          Quick Navigation
+        </button>
       </div>
     </div>
   </header>
+
+  <div class="mobile-nav-sheet no-print" id="mobileNavPanel" aria-hidden="true">
+    <button type="button" class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-label="Close mobile navigation"></button>
+    <div class="mobile-nav-card" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle">
+      <div class="mobile-nav-head">
+        <h2 id="mobileNavTitle">Quick Actions</h2>
+        <button type="button" class="mobile-nav-close" id="mobileNavClose" aria-label="Close quick actions">&times;</button>
+      </div>
+      <p class="mobile-nav-note">Desktop/laptop is recommended for full CV editing.</p>
+      <div class="mobile-nav-grid">
+        <button type="button" data-action="history">CV History</button>
+        <button type="button" data-action="profile">Agency Profile</button>
+        <button type="button" data-action="save-record">Save CV Record</button>
+        <button type="button" data-action="reset">Reset</button>
+        <button type="button" data-action="print">Print / Save PDF</button>
+        <button type="button" data-action="logout">Logout</button>
+      </div>
+    </div>
+  </div>
 
   <main class="workspace">
     <section class="editor no-print">
