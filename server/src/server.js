@@ -64,6 +64,14 @@ function parseOriginList(value) {
     .filter(Boolean);
 }
 
+function parseEmailList(value) {
+  if (!value) return [];
+  return String(value)
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter((email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+}
+
 function normalizeUrlBase(value) {
   const text = String(value || "").trim();
   if (!text) return "";
@@ -198,6 +206,9 @@ function createRuntimeConfig(env = process.env) {
 
   const ADMIN_BOOTSTRAP_EMAIL = sanitizeText(env.ADMIN_BOOTSTRAP_EMAIL || "", 160).toLowerCase();
   const ADMIN_BOOTSTRAP_PASSWORD = String(env.ADMIN_BOOTSTRAP_PASSWORD || "");
+  const ADMIN_ALLOWED_EMAILS = parseEmailList(
+    env.ADMIN_ALLOWED_EMAILS || env.ADMIN_OWNER_EMAIL || env.ADMIN_BOOTSTRAP_EMAIL || ""
+  );
   const PASSWORD_RESET_TOKEN_TTL_MINUTES = Math.min(
     180,
     Math.max(5, parseIntEnv(env.PASSWORD_RESET_TOKEN_TTL_MINUTES, 30))
@@ -256,6 +267,7 @@ function createRuntimeConfig(env = process.env) {
     RATE_LIMIT_STORE,
     ADMIN_BOOTSTRAP_EMAIL,
     ADMIN_BOOTSTRAP_PASSWORD,
+    ADMIN_ALLOWED_EMAILS,
     PASSWORD_RESET_TOKEN_TTL_MINUTES,
     PASSWORD_RESET_DELIVERY,
     PASSWORD_RESET_URL_BASE,
@@ -313,6 +325,14 @@ function normalizeAdminRow(row) {
     isActive: Boolean(row.is_active),
     createdAt: row.created_at
   };
+}
+
+function isAdminEmailAllowed(cfg, email) {
+  if (!Array.isArray(cfg.ADMIN_ALLOWED_EMAILS) || cfg.ADMIN_ALLOWED_EMAILS.length === 0) {
+    return true;
+  }
+  const normalized = sanitizeText(email, 160).toLowerCase();
+  return cfg.ADMIN_ALLOWED_EMAILS.includes(normalized);
 }
 
 async function findAgencyByEmail(executor, email) {
@@ -524,6 +544,9 @@ async function ensureBootstrapAdmin(pool, cfg, logger) {
   if (!isValidEmail(cfg.ADMIN_BOOTSTRAP_EMAIL)) {
     throw new Error("ADMIN_BOOTSTRAP_EMAIL is invalid.");
   }
+  if (!isAdminEmailAllowed(cfg, cfg.ADMIN_BOOTSTRAP_EMAIL)) {
+    throw new Error("ADMIN_BOOTSTRAP_EMAIL must be included in ADMIN_ALLOWED_EMAILS.");
+  }
   if (cfg.ADMIN_BOOTSTRAP_PASSWORD.length < 12) {
     throw new Error("ADMIN_BOOTSTRAP_PASSWORD must be at least 12 characters.");
   }
@@ -685,21 +708,34 @@ function createApp({ cfg, pool, logger, rateLimiterStore }) {
     }
   }
 
-  function adminRequired(req, res, next) {
+  async function adminRequired(req, res, next) {
     const token = getTokenFromRequest(req, cfg.ADMIN_SESSION_COOKIE_NAME);
     if (!token) {
       return res.status(401).json({ error: "Missing admin session" });
     }
+    let payload;
     try {
-      const payload = jwt.verify(token, cfg.ADMIN_JWT_SECRET, { algorithms: ["HS256"] });
-      if (!payload?.sub || typeof payload.sub !== "string" || payload.typ !== "admin") {
-        return res.status(401).json({ error: "Invalid admin session" });
-      }
-      req.adminId = payload.sub;
-      req.adminRole = payload.role || "admin";
-      return next();
+      payload = jwt.verify(token, cfg.ADMIN_JWT_SECRET, { algorithms: ["HS256"] });
     } catch {
       return res.status(401).json({ error: "Invalid admin session" });
+    }
+    if (!payload?.sub || typeof payload.sub !== "string" || payload.typ !== "admin") {
+      return res.status(401).json({ error: "Invalid admin session" });
+    }
+    try {
+      const row = await findAdminById(pool, payload.sub);
+      if (!row || !row.is_active) {
+        return res.status(401).json({ error: "Admin account is inactive" });
+      }
+      if (!isAdminEmailAllowed(cfg, row.email)) {
+        return res.status(403).json({ error: "Admin access is restricted." });
+      }
+      req.adminId = row.id;
+      req.adminRole = row.role || "admin";
+      return next();
+    } catch (error) {
+      logger.error("admin_session_validate_failed", { error: error.message, requestId: req.requestId });
+      return res.status(500).json({ error: "Failed to validate admin session" });
     }
   }
 
@@ -1188,6 +1224,9 @@ function createApp({ cfg, pool, logger, rateLimiterStore }) {
       const row = await findAdminByEmail(pool, normalizedEmail);
       if (!row || !row.is_active) {
         return res.status(401).json({ error: "Invalid admin credentials" });
+      }
+      if (!isAdminEmailAllowed(cfg, row.email)) {
+        return res.status(403).json({ error: "Admin access is restricted." });
       }
       const ok = await bcrypt.compare(passwordText, row.password_hash);
       if (!ok) {
