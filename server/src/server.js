@@ -31,12 +31,12 @@ const PLAN_CONFIG = {
   starter: { name: "Starter", cvLimit: 300, templates: ["classic", "desert", "emerald", "ruby"] },
   growth: {
     name: "Growth",
-    cvLimit: 500,
+    cvLimit: 700,
     templates: ["classic", "desert", "emerald", "royal", "sunrise", "slate", "ruby", "ocean"]
   },
   enterprise: {
-    name: "Enterprise",
-    cvLimit: 700,
+    name: "Scale",
+    cvLimit: 1500,
     templates: TEMPLATE_IDS
   }
 };
