@@ -13,14 +13,31 @@ dotenv.config();
 
 const { Pool } = pg;
 
+const TEMPLATE_IDS = [
+  "classic",
+  "desert",
+  "emerald",
+  "royal",
+  "sunrise",
+  "slate",
+  "ruby",
+  "midnight",
+  "ocean",
+  "carbon"
+];
+
 const PLAN_CONFIG = {
   free: { name: "Free", cvLimit: 3, templates: ["classic"] },
-  starter: { name: "Starter", cvLimit: 300, templates: ["classic", "desert", "emerald"] },
-  growth: { name: "Growth", cvLimit: 500, templates: ["classic", "desert", "emerald", "royal", "sunrise"] },
+  starter: { name: "Starter", cvLimit: 300, templates: ["classic", "desert", "emerald", "ruby"] },
+  growth: {
+    name: "Growth",
+    cvLimit: 500,
+    templates: ["classic", "desert", "emerald", "royal", "sunrise", "slate", "ruby", "ocean"]
+  },
   enterprise: {
     name: "Enterprise",
     cvLimit: 700,
-    templates: ["classic", "desert", "emerald", "royal", "sunrise", "slate"]
+    templates: TEMPLATE_IDS
   }
 };
 
@@ -262,6 +279,14 @@ function createDbPool(cfg) {
 
 function normalizeAgencyRow(row) {
   const planDefaults = PLAN_CONFIG[row.plan] || PLAN_CONFIG.free;
+  const defaultTemplates = Array.isArray(planDefaults.templates) ? planDefaults.templates : [];
+  const rowTemplates = Array.isArray(row.templates)
+    ? row.templates.filter((templateId) => TEMPLATE_IDS.includes(templateId))
+    : [];
+  const templates = Array.from(new Set([...rowTemplates, ...defaultTemplates])).filter((templateId) =>
+    TEMPLATE_IDS.includes(templateId)
+  );
+
   return {
     id: row.id,
     agencyName: row.agency_name,
@@ -270,7 +295,7 @@ function normalizeAgencyRow(row) {
     planName: row.plan_name || planDefaults.name,
     cvLimit: row.cv_limit ?? planDefaults.cvLimit,
     cvsCreated: row.cvs_created ?? 0,
-    templates: Array.isArray(row.templates) ? row.templates : planDefaults.templates,
+    templates,
     subscriptionStatus: row.subscription_status || "active",
     paymentMethod: row.payment_method || "",
     paymentReference: row.payment_reference || "",
