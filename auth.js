@@ -1,5 +1,10 @@
 const API_BASE = window.GULFCV_RUNTIME?.apiBase || "http://localhost:3000/api";
 const PAGE = document.body?.dataset.page || "landing";
+const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+const mobileSideNav = document.getElementById("mobileSideNav");
+const mobileSideBackdrop = document.getElementById("mobileSideBackdrop");
+const mobileSideClose = document.getElementById("mobileSideClose");
+const mobileNavActions = document.getElementById("mobileNavActions");
 
 let currentAgency = null;
 let activeAuthMode = "signin";
@@ -159,34 +164,65 @@ async function logout() {
   setAuthView(null);
   applyAuthQueryState();
   setMessage("Signed out successfully.", true);
+  setMobileMenuOpen(false);
+}
+
+function setMobileMenuOpen(isOpen) {
+  if (!mobileSideNav || !mobileMenuToggle) return;
+  mobileSideNav.classList.toggle("is-open", isOpen);
+  mobileSideNav.setAttribute("aria-hidden", isOpen ? "false" : "true");
+  mobileMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
+function bindMobileMenuEvents() {
+  if (!mobileSideNav || !mobileMenuToggle || !mobileSideBackdrop || !mobileSideClose) return;
+  mobileMenuToggle.addEventListener("click", () => {
+    const next = !mobileSideNav.classList.contains("is-open");
+    setMobileMenuOpen(next);
+  });
+  mobileSideBackdrop.addEventListener("click", () => setMobileMenuOpen(false));
+  mobileSideClose.addEventListener("click", () => setMobileMenuOpen(false));
+  mobileSideNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setMobileMenuOpen(false));
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setMobileMenuOpen(false);
+    }
+  });
 }
 
 function renderNav(agency) {
-  const nav = document.getElementById("navActions");
-  if (!nav) return;
+  const navs = [document.getElementById("navActions"), mobileNavActions].filter(Boolean);
+  if (navs.length === 0) return;
 
   if (!agency) {
-    nav.innerHTML = `
+    const html = `
       <a class="nav-btn primary" href="/auth?mode=signup">Get Started</a>
       <a class="nav-btn ghost" href="/auth?mode=signin">Sign In</a>
     `;
+    navs.forEach((nav) => {
+      nav.innerHTML = html;
+    });
     return;
   }
 
   const safeAgencyName = escapeHtml(agency.agencyName || "Agency");
-  nav.innerHTML = `
+  const html = `
     <span class="nav-chip">${safeAgencyName}</span>
     <a class="nav-btn" href="/profile">Profile</a>
     <a class="nav-btn primary" href="/dashboard">Dashboard</a>
-    <button type="button" class="nav-btn ghost" id="logoutBtn">Sign Out</button>
+    <button type="button" class="nav-btn ghost js-logout-btn">Sign Out</button>
   `;
+  navs.forEach((nav) => {
+    nav.innerHTML = html;
+  });
 
-  const logoutBtn = document.getElementById("logoutBtn");
-  if (logoutBtn) {
+  document.querySelectorAll(".js-logout-btn").forEach((logoutBtn) => {
     logoutBtn.addEventListener("click", () => {
       void logout();
     });
-  }
+  });
 }
 
 async function refreshAuthState() {
@@ -350,4 +386,5 @@ document.getElementById("resetForm")?.addEventListener("submit", async (event) =
 });
 
 applyAuthQueryState();
+bindMobileMenuEvents();
 void refreshAuthState();

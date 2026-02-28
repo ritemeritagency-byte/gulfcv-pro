@@ -18,6 +18,9 @@
         <strong>GulfCV Pro</strong>
         <span>Agency CV Platform</span>
       </div>
+      <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-expanded="false" aria-controls="mobileSideNav">
+        Menu
+      </button>
       <nav class="nav-main" aria-label="Primary">
         <a href="#product">Product</a>
         <a href="#templates">Templates</a>
@@ -32,6 +35,28 @@
         <a class="nav-btn ghost" href="/auth?mode=signin">Sign In</a>
       </nav>
     </div>
+  </div>
+  <div class="mobile-side-nav" id="mobileSideNav" aria-hidden="true">
+    <button type="button" class="mobile-side-backdrop" id="mobileSideBackdrop" aria-label="Close mobile menu"></button>
+    <aside class="mobile-side-panel" role="dialog" aria-modal="true" aria-labelledby="mobileSideTitle">
+      <div class="mobile-side-head">
+        <h2 id="mobileSideTitle">Navigation</h2>
+        <button type="button" class="mobile-side-close" id="mobileSideClose" aria-label="Close menu">&times;</button>
+      </div>
+      <nav class="mobile-side-links" aria-label="Mobile primary">
+        <a href="#product">Product</a>
+        <a href="#templates">Templates</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#languages">Languages</a>
+        <a href="#agencies">Agencies</a>
+        <a href="#plans">Pricing</a>
+        <a href="#resources">Resources</a>
+      </nav>
+      <div class="mobile-side-actions" id="mobileNavActions">
+        <a class="nav-btn primary" href="/auth?mode=signup">Get Started</a>
+        <a class="nav-btn ghost" href="/auth?mode=signin">Sign In</a>
+      </div>
+    </aside>
   </div>
 
   <header class="hero" id="product">
