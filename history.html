@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gulfcv-api-base" content="https://gulfcv-pro-production.up.railway.app/api">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <title>GulfCV Pro | CV History</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="history.css">
+</head>
+<body>
+  <header class="history-topbar">
+    <div class="history-topbar-inner">
+      <div class="brand">
+        <strong>GulfCV Pro</strong>
+        <span>CV History</span>
+      </div>
+      <nav class="history-actions">
+        <a href="/dashboard">Back to Builder</a>
+        <a href="profile.html">Agency Profile</a>
+        <button type="button" id="historyLogoutBtn">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="history-shell">
+    <section class="history-panel">
+      <div class="history-head">
+        <div>
+          <p class="kicker">Archive</p>
+          <h1>All Created CV Records</h1>
+        </div>
+        <div class="history-controls">
+          <input type="search" id="historySearch" placeholder="Search name or reference...">
+          <button type="button" id="historyRefreshBtn">Refresh</button>
+        </div>
+      </div>
+      <p id="historyStatus">Loading history...</p>
+      <div id="historyList" class="history-list"></div>
+      <div class="history-pagination">
+        <button type="button" id="historyPrevBtn">Previous</button>
+        <span id="historyPageInfo">Page 1</span>
+        <button type="button" id="historyNextBtn">Next</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="history.js"></script>
+</body>
+</html>

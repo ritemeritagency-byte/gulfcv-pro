@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gulfcv-api-base" content="https://gulfcv-pro-production.up.railway.app/api">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <title>Agency Profile | GulfCV Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <strong>GulfCV Pro</strong>
+        <span>Agency Dashboard</span>
+      </div>
+      <nav class="nav-actions">
+        <button type="button" class="nav-btn" id="goDashboard">Open CV Builder</button>
+        <button type="button" class="nav-btn primary" id="logoutBtn">Logout</button>
+      </nav>
+    </div>
+  </div>
+
+  <main class="profile-shell">
+    <section class="profile-overview">
+      <div class="profile-head">
+        <h1>Agency Account</h1>
+        <p id="profileInfo">Loading account data...</p>
+      </div>
+
+      <div class="metric-grid">
+        <article class="metric-card">
+          <h3>Subscription Plan</h3>
+          <p id="metricPlan">-</p>
+        </article>
+        <article class="metric-card">
+          <h3>CVs Created</h3>
+          <p id="metricUsage">0 / 0</p>
+        </article>
+        <article class="metric-card">
+          <h3>Remaining This Month</h3>
+          <p id="metricRemaining">0</p>
+        </article>
+        <article class="metric-card">
+          <h3>Status</h3>
+          <p><span class="status-pill" id="metricStatus">-</span></p>
+        </article>
+      </div>
+
+      <div class="usage-track">
+        <div class="usage-head">
+          <span>Monthly CV Usage</span>
+          <strong id="usagePct">0%</strong>
+        </div>
+        <div class="usage-bar-wrap">
+          <div class="usage-bar" id="usageBar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-editor">
+      <h2>Edit Agency Profile</h2>
+      <form id="profileForm" class="profile-form-grid">
+        <label class="profile-field">Agency Name (English)
+          <input type="text" id="agencyName" required>
+        </label>
+        <label class="profile-field">Agency Name (Arabic)
+          <input type="text" id="agencyNameAr">
+        </label>
+        <label class="profile-field span-2">Tagline
+          <input type="text" id="agencyTagline">
+        </label>
+        <label class="profile-field">Phone
+          <input type="text" id="agencyPhone">
+        </label>
+        <label class="profile-field">Email
+          <input type="text" id="agencyEmail">
+        </label>
+        <label class="profile-field">Website
+          <input type="text" id="agencyWebsite">
+        </label>
+        <label class="profile-field">Address
+          <input type="text" id="agencyAddress">
+        </label>
+        <label class="profile-field">Social Media 1
+          <input type="text" id="agencySocial1">
+        </label>
+        <label class="profile-field">Social Media 2
+          <input type="text" id="agencySocial2">
+        </label>
+        <div class="span-2 logo-upload-grid">
+          <label class="logo-uploader" data-empty-text="No logo selected">
+            <span class="logo-upload-label">Philippines Logo (Left)</span>
+            <span class="logo-upload-visual">
+              <span class="logo-upload-glyph" aria-hidden="true"></span>
+              <span class="logo-upload-title">Drop logo or click to browse</span>
+              <span class="logo-file-name">No logo selected</span>
+            </span>
+            <input type="file" id="agencyLogoFile" accept="image/*">
+            <img id="agencyLogoThumb" alt="Agency logo preview" class="logo-thumb">
+          </label>
+          <label class="logo-uploader" data-empty-text="No logo selected">
+            <span class="logo-upload-label">FRA Logo (Right)</span>
+            <span class="logo-upload-visual">
+              <span class="logo-upload-glyph" aria-hidden="true"></span>
+              <span class="logo-upload-title">Drop logo or click to browse</span>
+              <span class="logo-file-name">No logo selected</span>
+            </span>
+            <input type="file" id="fraLogoFile" accept="image/*">
+            <img id="fraLogoThumb" alt="FRA logo preview" class="logo-thumb">
+          </label>
+        </div>
+        <button type="submit" class="span-2 save-profile-btn">Save Profile</button>
+      </form>
+      <p id="profileMessage" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

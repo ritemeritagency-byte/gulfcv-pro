@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gulfcv-api-base" content="https://gulfcv-pro-production.up.railway.app/api">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <title>Subscription Payment | GulfCV Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <main class="layout" style="grid-template-columns: 1fr; max-width: 780px; padding-top: 1rem;">
+    <section class="auth">
+      <h2 style="margin-top:0;">Subscription Activation</h2>
+      <p id="subInfo">Loading account...</p>
+      <p>Send payment via GCash/Maya/Bank, then submit the reference below. Admin will activate your account.</p>
+
+      <form id="paymentForm">
+        <label>Payment Method
+          <select id="paymentMethod" required>
+            <option value="GCash">GCash</option>
+            <option value="Maya">Maya</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+          </select>
+        </label>
+        <label>Payment Reference
+          <input type="text" id="paymentReference" required placeholder="e.g. GCash Ref #">
+        </label>
+        <label>Note (Optional)
+          <input type="text" id="paymentNote" placeholder="e.g. sent by John at 10:30 AM">
+        </label>
+        <button type="submit">Submit Payment Proof</button>
+      </form>
+
+      <div class="tabs" style="margin-top:0.8rem;">
+        <button type="button" id="goLanding">Back To Landing</button>
+      </div>
+      <p id="paymentMessage" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="subscription.js"></script>
+</body>
+</html>

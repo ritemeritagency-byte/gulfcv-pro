@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gulfcv-api-base" content="https://gulfcv-pro-production.up.railway.app/api">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <title>Admin Activation | GCC CV Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+  <main class="layout" style="grid-template-columns:1fr; max-width:1000px; padding-top:1rem;">
+    <section class="auth">
+      <h2 style="margin-top:0;">Manual Subscription Activation</h2>
+
+      <div id="adminLoginPanel">
+        <label>Admin Email
+          <input type="email" id="adminEmail" autocomplete="username">
+        </label>
+        <label>Password
+          <input type="password" id="adminPassword" autocomplete="current-password">
+        </label>
+        <div class="tabs">
+          <button type="button" id="adminLoginBtn">Sign In</button>
+        </div>
+      </div>
+
+      <div id="adminSessionPanel" class="hidden">
+        <p id="adminSessionText">Signed in.</p>
+        <div class="tabs">
+          <button type="button" id="loadBtn">Load Agencies</button>
+          <button type="button" id="adminLogoutBtn">Sign Out</button>
+        </div>
+      </div>
+
+      <div id="adminList"></div>
+      <p id="adminMsg"></p>
+    </section>
+  </main>
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

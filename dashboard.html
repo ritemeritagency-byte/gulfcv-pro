@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <meta name="gulfcv-api-base" content="https://gulfcv-pro-production.up.railway.app/api">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <title>GulfCV Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="single-page notranslate">
+  <header class="app-header no-print">
+    <div class="header-main">
+      <div class="header-title">
+        <h1>GulfCV Pro</h1>
+        <p>Agency-ready bilingual (English + Arabic) candidate profile</p>
+      </div>
+        <div class="header-right">
+        <div class="header-meta">
+          <label class="theme-control">Template
+            <select id="themeSelect">
+              <option value="classic">Classic Gulf</option>
+              <option value="desert">Desert Gold</option>
+              <option value="emerald">Emerald Pro</option>
+              <option value="royal">Royal Blue</option>
+              <option value="sunrise">Sunrise Coral</option>
+              <option value="slate">Slate Executive</option>
+            </select>
+          </label>
+          <label class="theme-control">Layout
+            <select id="layoutSelect">
+              <option value="standard">Structure 1 - 2x2 + Full Body</option>
+              <option value="full-body">Structure 2 - Full Body Focus</option>
+              <option value="ph-local">Structure 3 - PH Plain Resume</option>
+              <option value="photo-left">Photo Left</option>
+              <option value="compact">Compact One-Page</option>
+            </select>
+          </label>
+          <label class="theme-control">Translation
+            <select id="translationSelect">
+              <option value="ar">Arabic</option>
+              <option value="zh-hk">Hong Kong Chinese</option>
+              <option value="ms">Malay (Malaysia)</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+        </div>
+        <div class="header-actions">
+          <button type="button" data-action="history">CV History</button>
+          <button type="button" data-action="profile">Agency Profile</button>
+          <button type="button" data-action="save-record">Save CV Record</button>
+          <button type="button" data-action="reset">Reset</button>
+          <button type="button" data-action="print">Print / Save PDF</button>
+          <button type="button" data-action="logout">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section class="editor no-print">
+      <form id="cvForm">
+        <div class="editor-note">
+          Agency branding and contact details are managed in <strong>Agency Profile</strong>.
+          This page focuses on candidate CV data entry.
+        </div>
+
+        <h2>Smart Auto-Fill</h2>
+        <div class="autofill-box">
+          <div id="scanDropzone" class="scan-dropzone" tabindex="0" role="button">
+            <p><strong>Drag & Drop Passport/Biodata Scan Here</strong></p>
+            <p>or click to choose an image file (auto-detect starts immediately)</p>
+            <input type="file" id="scanFileInput" accept="image/*" hidden>
+            <p id="scanFileMeta">No scan selected</p>
+          </div>
+          <button type="button" id="extractScanBtn" class="autofill-btn">Re-Detect From Scan</button>
+          <label>Detected Text (optional manual edit)
+            <textarea id="ocrInput" rows="6" placeholder="Paste extracted text here..."></textarea>
+          </label>
+          <label class="inline-check">
+            <input type="checkbox" id="autofillOverwrite">
+            Overwrite existing values
+          </label>
+          <button type="button" id="autoFillBtn" class="autofill-btn">Auto-Fill CV Fields</button>
+          <p id="autofillStatus" aria-live="polite"></p>
+        </div>
+
+        <div id="localModePanel" class="local-mode-panel">
+          <h2>Local CV Mode (Structure 3)</h2>
+          <div class="input-grid one">
+            <label>Resume Accent Color
+              <select name="localAccentColor" id="localAccentColor">
+                <option value="blue">Royal Blue</option>
+                <option value="emerald">Emerald Green</option>
+                <option value="maroon">Maroon Red</option>
+                <option value="teal">Deep Teal</option>
+                <option value="violet">Executive Violet</option>
+              </select>
+            </label>
+          </div>
+          <div class="input-grid two">
+            <label>Applicant Name
+              <input type="text" name="localFullName" placeholder="Lorna Alvarado">
+            </label>
+            <label>Target Position
+              <input type="text" name="localTargetRole" placeholder="Sales Representative">
+            </label>
+          </div>
+          <div class="input-grid two">
+            <label>Nationality
+              <input type="text" name="localNationality" placeholder="Filipino">
+            </label>
+            <label>Expected Salary
+              <input type="text" name="localExpectedSalary" placeholder="PHP 25,000">
+            </label>
+          </div>
+          <label>Professional Summary
+            <textarea name="localSummary" rows="3" placeholder="Short profile summary for office application."></textarea>
+          </label>
+          <div class="input-grid three">
+            <label>Phone
+              <input type="text" name="localPhone" placeholder="+63 912 345 6789">
+            </label>
+            <label>Email
+              <input type="text" name="localEmail" placeholder="applicant@email.com">
+            </label>
+            <label>Address
+              <input type="text" name="localAddress" placeholder="Cebu City, Philippines">
+            </label>
+          </div>
+          <label>Education (one line each)
+            <textarea name="localEducation" rows="3" placeholder="BSBA Marketing - Dooweck University (2010-2013)&#10;BA Sales and Commerce - Bayaren University (2013-2016)"></textarea>
+          </label>
+          <div class="input-grid two">
+            <label>Skills (one line each)
+              <textarea name="localSkills" rows="5" placeholder="Management Skills&#10;Negotiation&#10;Critical Thinking"></textarea>
+            </label>
+            <label>Languages (one line each)
+              <textarea name="localLanguages" rows="5" placeholder="English - Fluent&#10;Filipino - Native"></textarea>
+            </label>
+          </div>
+          <label>Professional Experience (one line each, format: Role | Company | Year-Year | Key responsibility)
+            <textarea name="localExperience" rows="6" placeholder="Inside Sales Representative | Arrowvai Industries | 2020-2023 | Managed 50+ client portfolio"></textarea>
+          </label>
+          <label>Certifications (one line each)
+            <textarea name="localCertifications" rows="3" placeholder="Digital Marketing Manager - Bisakaya Academy (2017)"></textarea>
+          </label>
+          <div class="input-grid two">
+            <label>Reference 1 (Name)
+              <input type="text" name="localRef1Name" placeholder="Bailey Dupont">
+            </label>
+            <label>Reference 2 (Name)
+              <input type="text" name="localRef2Name" placeholder="Harumi Kobayashi">
+            </label>
+          </div>
+          <div class="input-grid two">
+            <label>Reference 1 (Phone)
+              <input type="text" name="localRef1Phone" placeholder="+63 945 678 9001">
+            </label>
+            <label>Reference 2 (Phone)
+              <input type="text" name="localRef2Phone" placeholder="+63 945 678 9002">
+            </label>
+          </div>
+          <div class="input-grid two">
+            <label>Reference 1 (Email)
+              <input type="text" name="localRef1Email" placeholder="bailey@company.com">
+            </label>
+            <label>Reference 2 (Email)
+              <input type="text" name="localRef2Email" placeholder="harumi@company.com">
+            </label>
+          </div>
+        </div>
+
+        <div class="gcc-form-fields">
+        <h2>Document Settings</h2>
+        <div class="input-grid two">
+          <label>Reference No.
+            <input type="text" name="referenceNo" data-target="pvReferenceNo" placeholder="RMS-0679">
+          </label>
+          <label>Post Applied For
+            <input type="text" name="postApplied" data-target="pvPostApplied" placeholder="Lady Driver">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label>Monthly Salary
+            <input type="text" name="monthlySalary" data-target="pvMonthlySalary" placeholder="500 USD">
+          </label>
+          <label>Contract Period
+            <input type="text" name="contractPeriod" data-target="pvContractPeriod" placeholder="2 Years">
+          </label>
+        </div>
+
+        <h2>Candidate Details</h2>
+        <div class="input-grid two">
+          <label>Candidate Name
+            <input type="text" name="fullName" data-target="pvFullName" placeholder="Jane Doe">
+          </label>
+          <label>Nationality
+            <input type="text" name="nationality" data-target="pvNationality" placeholder="Filipino">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label>Religion
+            <input type="text" name="religion" data-target="pvReligion" placeholder="Roman Catholic">
+          </label>
+          <label>Date of Birth
+            <input type="text" name="dateOfBirth" data-target="pvDob" placeholder="06 SEP 1996">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label>Place of Birth
+            <input type="text" name="placeOfBirth" data-target="pvBirthPlace" placeholder="Carmona Cavite">
+          </label>
+          <label>Age
+            <input type="text" name="age" data-target="pvAge" placeholder="29">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label>Civil Status
+            <input type="text" name="civilStatus" data-target="pvCivilStatus" placeholder="Single">
+          </label>
+          <label>No. of Children
+            <input type="text" name="children" data-target="pvChildren" placeholder="0">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label>Weight (KG)
+            <input type="text" name="weight" data-target="pvWeight" placeholder="50">
+          </label>
+          <label>Height (CM)
+            <input type="text" name="height" data-target="pvHeight" placeholder="163">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label>Education Level
+            <input type="text" name="education" data-target="pvEducation" placeholder="College Graduate">
+          </label>
+          <label>Contact Number
+            <input type="text" name="contactNo" data-target="pvContactNo" placeholder="+63 999 111 5555">
+          </label>
+        </div>
+
+        <h2>Passport Details</h2>
+        <div class="input-grid two">
+          <label>Passport Number
+            <input type="text" name="passportNo" data-target="pvPassportNo" placeholder="P3637157C">
+          </label>
+          <label>Issue Date
+            <input type="text" name="passportIssue" data-target="pvPassportIssue" placeholder="21 MAR 2023">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label>Issue Place
+            <input type="text" name="passportPlace" data-target="pvPassportPlace" placeholder="DFA Manila">
+          </label>
+          <label>Expiry Date
+            <input type="text" name="passportExpiry" data-target="pvPassportExpiry" placeholder="20 MAR 2033">
+          </label>
+        </div>
+
+        <h2>Language & Experience</h2>
+        <div class="level-picker">
+          <span>English Level</span>
+          <label><input type="radio" name="englishLevel" value="Poor"> Poor</label>
+          <label><input type="radio" name="englishLevel" value="Fair"> Fair</label>
+          <label><input type="radio" name="englishLevel" value="Good" checked> Good</label>
+          <label><input type="radio" name="englishLevel" value="Very Good"> Very Good</label>
+          <label><input type="radio" name="englishLevel" value="Fluent"> Fluent</label>
+        </div>
+        <label>Working Experience (one line each)
+          <textarea name="workingExperience" id="workingExperience" rows="5" placeholder="Cooking&#10;Cleaning&#10;Washing&#10;Ironing&#10;Baby Sitting"></textarea>
+        </label>
+
+        <h2>Employment Abroad & Emergency</h2>
+        <div class="input-grid two">
+          <label>Previous Employment Country
+            <input type="text" name="prevCountry" data-target="pvPrevCountry" placeholder="First Timer">
+          </label>
+          <label>Period
+            <input type="text" name="prevPeriod" data-target="pvPrevPeriod" placeholder="-">
+          </label>
+        </div>
+        <div class="input-grid one">
+          <label>Emergency Contact Person
+            <input type="text" name="emergencyPerson" data-target="pvEmergencyPerson" placeholder="Lelita Marchan">
+          </label>
+        </div>
+        <div class="input-grid one">
+          <label>Emergency Contact No.
+            <input type="text" name="emergencyAddress" data-target="pvEmergencyAddress" placeholder="+63 910 0222 340">
+          </label>
+        </div>
+        </div>
+
+        <h2>Photos</h2>
+        <div class="input-grid two">
+          <label class="upload-tile passport-photo-field" data-empty-text="No photo selected">
+            <span class="upload-label">Passport Photo (2x2)</span>
+            <span class="upload-visual">
+              <span class="upload-glyph" aria-hidden="true"></span>
+              <span class="upload-title">Drop photo or click to browse</span>
+              <span class="upload-file-name">No photo selected</span>
+            </span>
+            <input type="file" id="passportPhotoInput" accept="image/*">
+          </label>
+          <label class="upload-tile" data-empty-text="No photo selected">
+            <span class="upload-label">Full Body Photo</span>
+            <span class="upload-visual">
+              <span class="upload-glyph" aria-hidden="true"></span>
+              <span class="upload-title">Drop photo or click to browse</span>
+              <span class="upload-file-name">No photo selected</span>
+            </span>
+            <input type="file" id="fullPhotoInput" accept="image/*">
+          </label>
+        </div>
+        <div class="input-grid three photo-adjust passport-photo-adjust">
+          <label>Passport Zoom
+            <input type="range" id="passportZoom" min="80" max="180" value="100">
+          </label>
+          <label>Passport X
+            <input type="range" id="passportOffsetX" min="-120" max="120" value="0">
+          </label>
+          <label>Passport Y
+            <input type="range" id="passportOffsetY" min="-120" max="120" value="0">
+          </label>
+        </div>
+        <div class="input-grid three photo-adjust">
+          <label>Full Body Zoom
+            <input type="range" id="fullZoom" min="80" max="180" value="100">
+          </label>
+          <label>Full Body X
+            <input type="range" id="fullOffsetX" min="-160" max="160" value="0">
+          </label>
+          <label>Full Body Y
+            <input type="range" id="fullOffsetY" min="-220" max="220" value="0">
+          </label>
+        </div>
+
+        <h2>Supporting Documents (Page 2)</h2>
+        <div class="input-grid two">
+          <label class="upload-tile" data-empty-text="No document selected">
+            <span class="upload-label">Passport Copy</span>
+            <span class="upload-visual">
+              <span class="upload-glyph" aria-hidden="true"></span>
+              <span class="upload-title">Drop file or click to browse</span>
+              <span class="upload-file-name">No document selected</span>
+            </span>
+            <input type="file" id="passportCopyInput" accept="image/*,.pdf">
+          </label>
+          <label class="upload-tile" data-empty-text="No document selected">
+            <span class="upload-label">Certificate 1</span>
+            <span class="upload-visual">
+              <span class="upload-glyph" aria-hidden="true"></span>
+              <span class="upload-title">Drop file or click to browse</span>
+              <span class="upload-file-name">No document selected</span>
+            </span>
+            <input type="file" id="certificate1Input" accept="image/*,.pdf">
+          </label>
+        </div>
+        <div class="input-grid two">
+          <label class="upload-tile" data-empty-text="No document selected">
+            <span class="upload-label">Certificate 2</span>
+            <span class="upload-visual">
+              <span class="upload-glyph" aria-hidden="true"></span>
+              <span class="upload-title">Drop file or click to browse</span>
+              <span class="upload-file-name">No document selected</span>
+            </span>
+            <input type="file" id="certificate2Input" accept="image/*,.pdf">
+          </label>
+          <label class="upload-tile" data-empty-text="No document selected">
+            <span class="upload-label">Certificate 3</span>
+            <span class="upload-visual">
+              <span class="upload-glyph" aria-hidden="true"></span>
+              <span class="upload-title">Drop file or click to browse</span>
+              <span class="upload-file-name">No document selected</span>
+            </span>
+            <input type="file" id="certificate3Input" accept="image/*,.pdf">
+          </label>
+        </div>
+        <div class="input-grid two doc-adjust-grid">
+          <label class="doc-select-control">Adjust Document
+            <select id="docAdjustTarget">
+              <option value="passportCopyPreview">Passport Copy</option>
+              <option value="certificate1Preview">Certificate 1</option>
+              <option value="certificate2Preview">Certificate 2</option>
+              <option value="certificate3Preview">Certificate 3</option>
+            </select>
+          </label>
+          <label>Zoom
+            <input type="range" id="docZoom" min="60" max="220" value="100">
+          </label>
+        </div>
+        <div class="input-grid two doc-adjust-grid">
+          <label>Horizontal
+            <input type="range" id="docOffsetX" min="-350" max="350" value="0">
+          </label>
+          <label>Vertical
+            <input type="range" id="docOffsetY" min="-450" max="450" value="0">
+          </label>
+        </div>
+
+      </form>
+    </section>
+
+    <section class="preview-wrap">
+      <div class="preview-stack">
+      <article class="paper" id="cvPreview">
+        <div class="agency-head">
+          <div class="brand-left">
+            <img id="agencyLogoPreview" alt="Agency Logo">
+            <div>
+              <h2 id="pvAgencyName">TABSEER AL AHDAB RECRUITMENT</h2>
+              <p class="ar" lang="ar" dir="rtl" id="pvAgencyNameAr">وكالة تبصير الأهداب للتوظيف</p>
+              <p id="pvAgencyTagline">Trusted Domestic Worker Recruitment Partner</p>
+            </div>
+            <img id="fraLogoPreview" alt="FRA Logo">
+          </div>
+        </div>
+
+        <div class="paper-head">
+          <span>Application For Employee</span>
+          <span class="ar" lang="ar" dir="rtl">طلب توظيف</span>
+        </div>
+
+        <div class="ph-local-resume">
+          <aside class="ph-local-sidebar">
+            <div class="ph-local-photo ph-card-photo">
+              <img id="phLocalPhotoPreview" alt="Resume Photo">
+            </div>
+            <section class="ph-local-card ph-card-contact">
+              <h3>Contact</h3>
+              <p><strong>Phone</strong><span id="phContactPhone">+63 999 111 5555</span></p>
+              <p><strong>Email</strong><span id="phContactEmail">info@agency.com</span></p>
+              <p><strong>Address</strong><span id="phContactAddress">Bahrain</span></p>
+            </section>
+            <section class="ph-local-card ph-card-education">
+              <h3>Education</h3>
+              <p id="phEducationSummary">College Graduate</p>
+            </section>
+            <section class="ph-local-card ph-card-skills">
+              <h3>Skills</h3>
+              <ul id="phSkillsList">
+                <li>Cooking</li>
+                <li>Cleaning</li>
+                <li>Washing</li>
+                <li>Ironing</li>
+              </ul>
+            </section>
+            <section class="ph-local-card ph-card-language">
+              <h3>Language</h3>
+              <ul id="phLanguageList">
+                <li id="phEnglishLevel">English - Good</li>
+              </ul>
+            </section>
+          </aside>
+          <section class="ph-local-main">
+            <header class="ph-local-head ph-card-head">
+              <h2 id="pvResumeName">JANE DOE</h2>
+              <p class="resume-role" id="pvResumePostApplied">LADY DRIVER</p>
+              <p class="resume-meta">Nationality: <span id="pvResumeNationality">FILIPINO</span></p>
+              <p class="resume-meta">Expected Salary: <span id="pvResumeSalary">500 USD</span></p>
+              <p class="resume-summary" id="phResumeSummary">Experienced office professional with strong communication and client service skills.</p>
+            </header>
+            <section class="ph-local-card ph-card-experience">
+              <h3>Professional Experience</h3>
+              <ul id="phExperienceList">
+                <li>Cooking and household support</li>
+                <li>Cleaning and organizing</li>
+              </ul>
+            </section>
+            <section class="ph-local-card ph-card-reference">
+              <h3>References</h3>
+              <div class="ph-reference-grid" id="phReferenceGrid">
+                <div class="ph-reference-item">
+                  <p class="ph-ref-name" id="phReferenceName">LELITA MARCHAN</p>
+                  <p class="ph-ref-meta" id="phReferencePhone">+63 910 0222 340</p>
+                  <p class="ph-ref-meta" id="phReferenceEmail">info@agency.com</p>
+                </div>
+                <div class="ph-reference-item">
+                  <p class="ph-ref-name" id="phReferenceName2">HARUMI KOBAYASHI</p>
+                  <p class="ph-ref-meta" id="phReferencePhone2">+63 910 0222 341</p>
+                  <p class="ph-ref-meta" id="phReferenceEmail2">harumi@email.com</p>
+                </div>
+              </div>
+              <ul id="phCertificationList" class="ph-certification-list">
+                <li>Digital Marketing Manager - 2017</li>
+              </ul>
+            </section>
+          </section>
+        </div>
+
+        <table class="cv-table">
+          <tr>
+            <th>Reference No.</th>
+            <td id="pvReferenceNo">RMS-0679</td>
+            <th class="ar" lang="ar" dir="rtl">رقم المرجع</th>
+          </tr>
+          <tr>
+            <th>Post Applied For</th>
+            <td id="pvPostApplied">LADY DRIVER</td>
+            <th class="ar" lang="ar" dir="rtl">الوظيفة المطلوبة</th>
+          </tr>
+          <tr>
+            <th>Monthly Salary</th>
+            <td id="pvMonthlySalary">500 USD</td>
+            <th class="ar" lang="ar" dir="rtl">الراتب الشهري</th>
+          </tr>
+          <tr>
+            <th>Contract Period</th>
+            <td id="pvContractPeriod">2 YEARS</td>
+            <th class="ar" lang="ar" dir="rtl">مدة العقد</th>
+          </tr>
+          <tr class="name-row">
+            <th>NAME</th>
+            <td id="pvFullName">JANE DOE</td>
+            <th class="ar" lang="ar" dir="rtl">الاسم الكامل</th>
+          </tr>
+        </table>
+
+        <div class="mid-layout">
+          <div class="mid-left">
+            <table class="cv-table">
+              <tr class="section-row">
+                <td colspan="3">
+                  <span>Details Of Applicant</span>
+                  <span class="ar" lang="ar" dir="rtl">بيانات مقدم الطلب</span>
+                </td>
+              </tr>
+              <tr><th>Nationality</th><td id="pvNationality">FILIPINO</td><th class="ar" lang="ar" dir="rtl">الجنسية</th></tr>
+              <tr><th>Religion</th><td id="pvReligion">ROMAN CATHOLIC</td><th class="ar" lang="ar" dir="rtl">الديانة</th></tr>
+              <tr><th>Date Of Birth</th><td id="pvDob">06 SEP 1996</td><th class="ar" lang="ar" dir="rtl">تاريخ الميلاد</th></tr>
+              <tr><th>Place of birth</th><td id="pvBirthPlace">CARMONA CAVITE</td><th class="ar" lang="ar" dir="rtl">مكان الميلاد</th></tr>
+              <tr><th>Age</th><td id="pvAge">29</td><th class="ar" lang="ar" dir="rtl">العمر</th></tr>
+              <tr><th>Civil Status</th><td id="pvCivilStatus">SINGLE</td><th class="ar" lang="ar" dir="rtl">الحالة الاجتماعية</th></tr>
+              <tr><th>No of Children</th><td id="pvChildren">0</td><th class="ar" lang="ar" dir="rtl">عدد الأطفال</th></tr>
+              <tr><th>Weight</th><td id="pvWeight">50 KG</td><th class="ar" lang="ar" dir="rtl">الوزن</th></tr>
+              <tr><th>Height</th><td id="pvHeight">163 CM</td><th class="ar" lang="ar" dir="rtl">الطول</th></tr>
+              <tr><th>Education Level</th><td id="pvEducation">COLLEGE GRADUATE</td><th class="ar" lang="ar" dir="rtl">المستوى التعليمي</th></tr>
+              <tr><th>Contact No.</th><td id="pvContactNo">+63 999 111 5555</td><th class="ar" lang="ar" dir="rtl">رقم الاتصال</th></tr>
+            </table>
+
+            <table class="cv-table">
+              <tr class="section-row">
+                <td colspan="3">
+                  <span>Knowledge Of Language</span>
+                  <span class="ar" lang="ar" dir="rtl">المهارات اللغوية</span>
+                </td>
+              </tr>
+              <tr class="lang-head"><th>English</th><th>Level</th><th class="ar" lang="ar" dir="rtl">العربية</th></tr>
+              <tr><th>Poor</th><td id="lvPoor"></td><th class="ar" lang="ar" dir="rtl">ضعيف</th></tr>
+              <tr><th>Fair</th><td id="lvFair"></td><th class="ar" lang="ar" dir="rtl">مقبول</th></tr>
+              <tr><th>Good</th><td id="lvGood">✓</td><th class="ar" lang="ar" dir="rtl">جيد</th></tr>
+              <tr><th>Very Good</th><td id="lvVeryGood"></td><th class="ar" lang="ar" dir="rtl">جيد جدا</th></tr>
+              <tr><th>Fluent</th><td id="lvFluent"></td><th class="ar" lang="ar" dir="rtl">ممتاز</th></tr>
+            </table>
+
+            <table class="cv-table">
+              <tr class="section-row">
+                <td colspan="3">
+                  <span>Working Experience</span>
+                  <span class="ar" lang="ar" dir="rtl">الخبرة العملية</span>
+                </td>
+              </tr>
+              <tbody id="workRows"></tbody>
+            </table>
+
+            <table class="cv-table">
+              <tr class="section-row">
+                <td colspan="3">
+                  <span>Previous Employment Abroad</span>
+                  <span class="ar" lang="ar" dir="rtl">خبرة العمل بالخارج السابقة</span>
+                </td>
+              </tr>
+              <tr><th>Country</th><td id="pvPrevCountry">FIRST TIMER</td><th class="ar" lang="ar" dir="rtl">الدولة</th></tr>
+              <tr><th>Period</th><td id="pvPrevPeriod">-</td><th class="ar" lang="ar" dir="rtl">الفترة</th></tr>
+            </table>
+
+            <table class="cv-table">
+              <tr class="section-row">
+                <td colspan="3">
+                  <span>Emergency</span>
+                  <span class="ar" lang="ar" dir="rtl">بيانات الطوارئ</span>
+                </td>
+              </tr>
+              <tr><th>Contact Person</th><td id="pvEmergencyPerson">LELITA MARCHAN</td><th class="ar" lang="ar" dir="rtl">شخص للطوارئ</th></tr>
+              <tr><th>Contact No.</th><td id="pvEmergencyAddress">+63 910 0222 340</td><th class="ar" lang="ar" dir="rtl">رقم الاتصال</th></tr>
+            </table>
+          </div>
+
+          <div class="mid-right">
+            <table class="cv-table">
+              <tr class="section-row">
+                <td colspan="3">
+                  <span>Passport Details</span>
+                  <span class="ar" lang="ar" dir="rtl">بيانات جواز السفر</span>
+                </td>
+              </tr>
+              <tr><th>Number</th><td id="pvPassportNo">P3637157C</td><th class="ar" lang="ar" dir="rtl">رقم الجواز</th></tr>
+              <tr><th>Issue Date</th><td id="pvPassportIssue">21 MAR 2023</td><th class="ar" lang="ar" dir="rtl">تاريخ الإصدار</th></tr>
+              <tr><th>Place</th><td id="pvPassportPlace">DFA MANILA</td><th class="ar" lang="ar" dir="rtl">مكان الإصدار</th></tr>
+              <tr><th>Exp. Date</th><td id="pvPassportExpiry">20 MAR 2033</td><th class="ar" lang="ar" dir="rtl">تاريخ الانتهاء</th></tr>
+            </table>
+
+            <div class="photo-card passport" id="passportPhotoCard">
+              <div class="photo-frame">
+                <img id="passportPhotoPreview" alt="Passport Photo">
+              </div>
+            </div>
+            <div class="photo-card full">
+              <div class="photo-frame">
+                <img id="fullPhotoPreview" alt="Full Body Photo">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="agency-footer">
+          <div class="footer-row">
+            <span id="pvAgencyPhone">+971 00 000 0000</span>
+            <span id="pvAgencyEmail">info@agency.com</span>
+            <span id="pvAgencyWebsite">www.agency.com</span>
+          </div>
+          <div class="footer-row">
+            <span id="pvAgencySocial1">@agencyinstagram</span>
+            <span id="pvAgencySocial2">facebook.com/agency</span>
+            <span id="pvAgencyAddress">Sarayaa Avenue Block B, Al Garhoud, Dubai UAE</span>
+          </div>
+        </footer>
+      </article>
+
+      <article class="paper supporting-page" id="passportPage">
+        <div class="agency-head small">
+          <div class="brand-left">
+            <img id="agencyLogoPreviewPage2" alt="Agency Logo">
+            <div>
+              <h2 id="pvAgencyNamePage2">TABSEER AL AHDAB RECRUITMENT</h2>
+              <p class="ar" lang="ar" dir="rtl" id="pvAgencyNameArPage2">وكالة تبصير الأهداب للتوظيف</p>
+            </div>
+            <img id="fraLogoPreviewPage2" alt="FRA Logo">
+          </div>
+        </div>
+
+        <div class="paper-head">
+          <span>Passport Copy</span>
+          <span class="ar" lang="ar" dir="rtl">نسخة جواز السفر</span>
+        </div>
+
+        <div class="single-doc-wrap">
+          <div class="doc-card large full-page-doc">
+            <div class="doc-frame">
+              <img id="passportCopyPreview" alt="Passport Copy">
+            </div>
+            <p>Passport Copy</p>
+          </div>
+        </div>
+
+        <footer class="agency-footer">
+          <div class="footer-row">
+            <span id="pvAgencyPhonePage2">+971 00 000 0000</span>
+            <span id="pvAgencyEmailPage2">info@agency.com</span>
+            <span id="pvAgencyWebsitePage2">www.agency.com</span>
+          </div>
+          <div class="footer-row">
+            <span id="pvAgencySocial1Page2">@agencyinstagram</span>
+            <span id="pvAgencySocial2Page2">facebook.com/agency</span>
+            <span id="pvAgencyAddressPage2">Sarayaa Avenue Block B, Al Garhoud, Dubai UAE</span>
+          </div>
+        </footer>
+      </article>
+
+      <article class="paper supporting-page" id="certificate1Page">
+        <div class="agency-head small">
+          <div class="brand-left">
+            <img id="agencyLogoPreviewPage3" alt="Agency Logo">
+            <div>
+              <h2 id="pvAgencyNamePage3">TABSEER AL AHDAB RECRUITMENT</h2>
+              <p class="ar" lang="ar" dir="rtl" id="pvAgencyNameArPage3">وكالة تبصير الأهداب للتوظيف</p>
+            </div>
+            <img id="fraLogoPreviewPage3" alt="FRA Logo">
+          </div>
+        </div>
+
+        <div class="paper-head">
+          <span>Certificate 1</span>
+          <span class="ar" lang="ar" dir="rtl">الشهادة 1</span>
+        </div>
+
+        <div class="single-doc-wrap">
+          <div class="doc-card large full-page-doc">
+            <div class="doc-frame">
+              <img id="certificate1Preview" alt="Certificate 1">
+            </div>
+            <p>Certificate 1</p>
+          </div>
+        </div>
+
+        <footer class="agency-footer">
+          <div class="footer-row">
+            <span id="pvAgencyPhonePage3">+971 00 000 0000</span>
+            <span id="pvAgencyEmailPage3">info@agency.com</span>
+            <span id="pvAgencyWebsitePage3">www.agency.com</span>
+          </div>
+          <div class="footer-row">
+            <span id="pvAgencySocial1Page3">@agencyinstagram</span>
+            <span id="pvAgencySocial2Page3">facebook.com/agency</span>
+            <span id="pvAgencyAddressPage3">Sarayaa Avenue Block B, Al Garhoud, Dubai UAE</span>
+          </div>
+        </footer>
+      </article>
+
+      <article class="paper supporting-page" id="certificate2Page">
+        <div class="agency-head small">
+          <div class="brand-left">
+            <img id="agencyLogoPreviewPage4" alt="Agency Logo">
+            <div>
+              <h2 id="pvAgencyNamePage4">TABSEER AL AHDAB RECRUITMENT</h2>
+              <p class="ar" lang="ar" dir="rtl" id="pvAgencyNameArPage4">وكالة تبصير الأهداب للتوظيف</p>
+            </div>
+            <img id="fraLogoPreviewPage4" alt="FRA Logo">
+          </div>
+        </div>
+
+        <div class="paper-head">
+          <span>Certificate 2</span>
+          <span class="ar" lang="ar" dir="rtl">الشهادة 2</span>
+        </div>
+
+        <div class="single-doc-wrap">
+          <div class="doc-card large full-page-doc">
+            <div class="doc-frame">
+              <img id="certificate2Preview" alt="Certificate 2">
+            </div>
+            <p>Certificate 2</p>
+          </div>
+        </div>
+
+        <footer class="agency-footer">
+          <div class="footer-row">
+            <span id="pvAgencyPhonePage4">+971 00 000 0000</span>
+            <span id="pvAgencyEmailPage4">info@agency.com</span>
+            <span id="pvAgencyWebsitePage4">www.agency.com</span>
+          </div>
+          <div class="footer-row">
+            <span id="pvAgencySocial1Page4">@agencyinstagram</span>
+            <span id="pvAgencySocial2Page4">facebook.com/agency</span>
+            <span id="pvAgencyAddressPage4">Sarayaa Avenue Block B, Al Garhoud, Dubai UAE</span>
+          </div>
+        </footer>
+      </article>
+
+      <article class="paper supporting-page" id="certificate3Page">
+        <div class="agency-head small">
+          <div class="brand-left">
+            <img id="agencyLogoPreviewPage5" alt="Agency Logo">
+            <div>
+              <h2 id="pvAgencyNamePage5">TABSEER AL AHDAB RECRUITMENT</h2>
+              <p class="ar" lang="ar" dir="rtl" id="pvAgencyNameArPage5">وكالة تبصير الأهداب للتوظيف</p>
+            </div>
+            <img id="fraLogoPreviewPage5" alt="FRA Logo">
+          </div>
+        </div>
+
+        <div class="paper-head">
+          <span>Certificate 3</span>
+          <span class="ar" lang="ar" dir="rtl">الشهادة 3</span>
+        </div>
+
+        <div class="single-doc-wrap">
+          <div class="doc-card large full-page-doc">
+            <div class="doc-frame">
+              <img id="certificate3Preview" alt="Certificate 3">
+            </div>
+            <p>Certificate 3</p>
+          </div>
+        </div>
+
+        <footer class="agency-footer">
+          <div class="footer-row">
+            <span id="pvAgencyPhonePage5">+971 00 000 0000</span>
+            <span id="pvAgencyEmailPage5">info@agency.com</span>
+            <span id="pvAgencyWebsitePage5">www.agency.com</span>
+          </div>
+          <div class="footer-row">
+            <span id="pvAgencySocial1Page5">@agencyinstagram</span>
+            <span id="pvAgencySocial2Page5">facebook.com/agency</span>
+            <span id="pvAgencyAddressPage5">Sarayaa Avenue Block B, Al Garhoud, Dubai UAE</span>
+          </div>
+        </footer>
+      </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
+

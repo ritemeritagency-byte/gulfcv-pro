@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gulfcv-api-base" content="https://gulfcv-pro-production.up.railway.app/api">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <title>GulfCV Pro | Agency Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body data-page="landing">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <strong>GulfCV Pro</strong>
+        <span>Agency CV Platform</span>
+      </div>
+      <nav class="nav-main" aria-label="Primary">
+        <a href="#product">Product</a>
+        <a href="#templates">Templates</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#languages">Languages</a>
+        <a href="#agencies">Agencies</a>
+        <a href="#plans">Pricing</a>
+        <a href="#resources">Resources</a>
+      </nav>
+      <nav class="nav-actions" id="navActions">
+        <a class="nav-btn primary" href="/auth?mode=signup">Get Started</a>
+        <a class="nav-btn ghost" href="/auth?mode=signin">Sign In</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero" id="product">
+    <div class="hero-content">
+      <p class="kicker">Built for GCC Recruitment Teams</p>
+      <h1>Professional CV Generator for Fast Agency Delivery</h1>
+      <p class="sub">Create polished, client-ready CVs in minutes with branded templates, bilingual output, and clear monthly quota controls.</p>
+      <div class="hero-points">
+        <span>Arabic + English CV output</span>
+        <span>Agency logo + footer branding</span>
+        <span>Quota tracking by plan</span>
+      </div>
+      <div class="hero-ctas">
+        <a href="/auth?mode=signup" class="cta">Start Free Trial</a>
+        <a href="#templates" class="cta cta-soft">View Templates</a>
+      </div>
+      <div class="hero-stats" aria-label="Platform highlights">
+        <article>
+          <strong>5+</strong>
+          <span>Ready Templates</span>
+        </article>
+        <article>
+          <strong>4</strong>
+          <span>Plan Levels</span>
+        </article>
+        <article>
+          <strong>24/7</strong>
+          <span>Cloud Access</span>
+        </article>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="template-gallery" id="templates">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Template Designs</p>
+          <h2>CV Templates With Full Preview</h2>
+        </div>
+        <p class="pricing-note">Click any template card to open full view before selecting your agency plan.</p>
+      </div>
+      <div class="template-grid">
+        <article class="template-card">
+          <button type="button" class="template-open" data-template-name="GCC Template 1" data-template-src="cvphotodesign/gcc-template-1.png">
+            <img src="cvphotodesign/gcc-template-1.png" alt="GCC CV Template Design 1">
+            <span class="template-overlay">Full View</span>
+          </button>
+          <p>GCC Template 1</p>
+        </article>
+        <article class="template-card">
+          <button type="button" class="template-open" data-template-name="GCC Template 2" data-template-src="cvphotodesign/gcc-template-2.png">
+            <img src="cvphotodesign/gcc-template-2.png" alt="GCC CV Template Design 2">
+            <span class="template-overlay">Full View</span>
+          </button>
+          <p>GCC Template 2</p>
+        </article>
+        <article class="template-card">
+          <button type="button" class="template-open" data-template-name="GCC Template 3" data-template-src="cvphotodesign/gcc-template-3.png">
+            <img src="cvphotodesign/gcc-template-3.png" alt="GCC CV Template Design 3">
+            <span class="template-overlay">Full View</span>
+          </button>
+          <p>GCC Template 3</p>
+        </article>
+        <article class="template-card">
+          <button type="button" class="template-open" data-template-name="GCC Template 4" data-template-src="cvphotodesign/gcc-template-4.png">
+            <img src="cvphotodesign/gcc-template-4.png" alt="GCC CV Template Design 4">
+            <span class="template-overlay">Full View</span>
+          </button>
+          <p>GCC Template 4</p>
+        </article>
+        <article class="template-card">
+          <button type="button" class="template-open" data-template-name="GCC Template 5" data-template-src="cvphotodesign/gcc-template-5.png">
+            <img src="cvphotodesign/gcc-template-5.png" alt="GCC CV Template Design 5">
+            <span class="template-overlay">Full View</span>
+          </button>
+          <p>GCC Template 5</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="plans" id="plans">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Pricing</p>
+          <h2>Simple Plans for Every Agency Stage</h2>
+        </div>
+        <p class="pricing-note">All plans include bilingual templates, agency profile branding, and secure account access.</p>
+      </div>
+      <div class="plan-grid">
+        <article class="plan">
+          <p class="plan-badge">Starter Access</p>
+          <h3>Free</h3>
+          <p class="price">PHP 0<span>/month</span></p>
+          <p class="plan-copy">Best for trial setup and internal onboarding.</p>
+          <ul class="plan-list">
+            <li>3 CV records per month</li>
+            <li>Classic template access</li>
+            <li>Basic agency profile setup</li>
+          </ul>
+          <button type="button" class="plan-btn" data-plan="free">Choose Free</button>
+        </article>
+        <article class="plan">
+          <p class="plan-badge">Most Chosen by New Teams</p>
+          <h3>Starter</h3>
+          <p class="price">PHP 599<span>/month</span></p>
+          <p class="plan-copy">For agencies running active monthly submissions.</p>
+          <ul class="plan-list">
+            <li>300 CV records per month</li>
+            <li>Classic + Desert templates</li>
+            <li>Agency dashboard and usage tracking</li>
+          </ul>
+          <button type="button" class="plan-btn" data-plan="starter">Choose Starter</button>
+        </article>
+        <article class="plan featured">
+          <p class="plan-badge">Recommended</p>
+          <h3>Growth</h3>
+          <p class="price">PHP 1,199<span>/month</span></p>
+          <p class="plan-copy">Designed for high-output agencies and recruiter teams.</p>
+          <ul class="plan-list">
+            <li>500 CV records per month</li>
+            <li>Classic, Desert, Emerald, Royal, Sunrise</li>
+            <li>Priority-ready profile workflows</li>
+          </ul>
+          <button type="button" class="plan-btn" data-plan="growth">Choose Growth</button>
+        </article>
+        <article class="plan">
+          <p class="plan-badge">Scale Plan</p>
+          <h3>Enterprise</h3>
+          <p class="price">PHP 2,999<span>/month</span></p>
+          <p class="plan-copy">For large deployment pipelines and premium partner requirements.</p>
+          <ul class="plan-list">
+            <li>700+ CV records per month</li>
+            <li>All templates + custom theme support</li>
+            <li>Advanced operational flexibility</li>
+          </ul>
+          <button type="button" class="plan-btn" data-plan="enterprise">Choose Enterprise</button>
+        </article>
+      </div>
+      <p class="pricing-footnote">Need custom volume or white-label setup? Contact ClipDevs I.T. Services for enterprise onboarding.</p>
+    </section>
+  </main>
+
+  <section class="about" id="agencies">
+    <div class="about-inner">
+      <h2>What This App Is For</h2>
+      <p>
+        GulfCV Pro helps recruitment agencies create standardized bilingual CVs,
+        track quota by subscription, and deliver clean partner-ready profiles for GCC
+        and overseas deployment.
+      </p>
+    </div>
+  </section>
+
+  <section class="value-band" id="solutions">
+    <div class="value-grid">
+      <article>
+        <h3>Built For Agencies</h3>
+        <p>Designed for recruitment teams managing multiple candidates across GCC partner requirements.</p>
+      </article>
+      <article>
+        <h3>Bilingual Output</h3>
+        <p>Generate English + Arabic CVs in one consistent, partner-ready format.</p>
+      </article>
+      <article>
+        <h3>Subscription Control</h3>
+        <p>Track monthly CV quota by plan and control template access per agency account.</p>
+      </article>
+      <article>
+        <h3>Fast Deployment</h3>
+        <p>Use immediately with your branding, footer details, and profile defaults.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="language-support" id="languages">
+    <div class="language-head">
+      <p class="eyebrow">Powered Language Support</p>
+      <h2>Multi-Language CV Output</h2>
+      <p>Generate recruitment-ready CV formats with language pairs required by your deployment market.</p>
+    </div>
+    <div class="language-grid">
+      <article>
+        <h3>English</h3>
+        <p>Primary working language for agency operations and employer review.</p>
+      </article>
+      <article>
+        <h3>Arabic</h3>
+        <p>Built for GCC employer document requirements and partner submissions.</p>
+      </article>
+      <article>
+        <h3>Hong Kong Chinese</h3>
+        <p>Support for agencies handling candidates for Hong Kong destinations.</p>
+      </article>
+      <article>
+        <h3>Malay (Malaysia)</h3>
+        <p>Ready for Malaysia-focused agency workflows and client handover.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="how" id="resources">
+    <h2>How GulfCV Pro Works</h2>
+    <div class="how-grid">
+      <article><span>1</span><p>Create agency account and choose a plan.</p></article>
+      <article><span>2</span><p>Set agency profile, logos, and contact footer.</p></article>
+      <article><span>3</span><p>Generate CVs with the required country template.</p></article>
+      <article><span>4</span><p>Submit partner-ready PDF in one click.</p></article>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="foot-grid">
+      <div>
+        <h4>GulfCV Pro</h4>
+        <p>Agency CV operating system for GCC and overseas recruitment workflows.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>support@gulfcvpro.com</p>
+        <p>+971 00 000 0000</p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <p>Templates</p>
+        <p>Subscriptions</p>
+        <p>Agency Profile</p>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <p>Terms of Service</p>
+        <p>Privacy Policy</p>
+        <p>Refund Policy</p>
+      </div>
+    </div>
+    <p class="copy">&copy; 2026 GulfCV Pro. All rights reserved.</p>
+    <p class="copy">Developed by ClipDevs I.T. Services (DTI Registered).</p>
+  </footer>
+
+  <div class="template-modal hidden" id="templateModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="templateModalTitle">
+    <div class="template-modal-backdrop" id="templateModalBackdrop"></div>
+    <div class="template-modal-panel">
+      <div class="template-modal-head">
+        <h3 id="templateModalTitle">Template Preview</h3>
+        <button type="button" class="template-modal-close" id="templateModalClose" aria-label="Close template full view">&times;</button>
+      </div>
+      <div class="template-modal-body">
+        <img id="templateModalImage" src="" alt="Template full preview">
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="landing.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
