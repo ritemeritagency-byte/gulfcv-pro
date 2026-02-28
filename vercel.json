@@ -1,3 +1,13 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/api",
+      "destination": "https://gulfcv-pro-production.up.railway.app/api"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://gulfcv-pro-production.up.railway.app/api/:path*"
+    }
+  ]
 }
