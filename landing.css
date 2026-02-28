@@ -31,20 +31,21 @@ body {
 }
 
 .topbar-inner {
-  max-width: 1200px;
+  max-width: 1360px;
   margin: 0 auto;
   padding: 0.7rem 1rem;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .brand {
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .brand strong {
@@ -59,8 +60,20 @@ body {
 .nav-main {
   display: flex;
   justify-content: center;
-  gap: 1.1rem;
-  flex-wrap: wrap;
+  gap: 1rem;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0.1rem 0.2rem;
+}
+
+.nav-main::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 .nav-main a {
@@ -71,6 +84,7 @@ body {
   text-transform: uppercase;
   padding: 0.2rem 0.05rem;
   border-bottom: 1px solid transparent;
+  white-space: nowrap;
 }
 
 .nav-main a:hover {
@@ -81,7 +95,8 @@ body {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .nav-chip {
@@ -94,6 +109,10 @@ body {
   color: #21487d;
   font-size: 0.82rem;
   font-weight: 700;
+  max-width: min(44vw, 430px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-btn {

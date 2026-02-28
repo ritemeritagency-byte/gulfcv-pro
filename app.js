@@ -118,6 +118,13 @@ const TEMPLATE_ENGINE = {
       defaultTranslation: "ar"
     },
     {
+      id: "full-body-left",
+      label: "Structure 4 - Full Body Left",
+      dataLayout: "full-body-left",
+      market: "gcc",
+      defaultTranslation: "ar"
+    },
+    {
       id: "compact",
       label: "Compact One-Page",
       dataLayout: "compact",
