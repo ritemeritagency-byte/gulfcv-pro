@@ -142,6 +142,24 @@ const TEMPLATE_ENGINE = {
   ]
 };
 
+const PLAN_THEME_FALLBACK = {
+  free: ["classic"],
+  starter: ["classic", "desert", "emerald", "ruby"],
+  growth: ["classic", "desert", "emerald", "royal", "sunrise", "slate", "ruby", "ocean"],
+  enterprise: [
+    "classic",
+    "desert",
+    "emerald",
+    "royal",
+    "sunrise",
+    "slate",
+    "ruby",
+    "midnight",
+    "ocean",
+    "carbon"
+  ]
+};
+
 function getLayoutConfig(layoutId) {
   if (layoutId === "ph-modern") {
     layoutId = "ph-local";
@@ -1946,7 +1964,10 @@ function enforceTemplateAccess(agency) {
   if (!themeSelect || !agency) {
     return;
   }
-  const allowed = new Set(agency.templates || ["classic"]);
+  const planKey = String(agency.plan || "free").toLowerCase();
+  const fallbackTemplates = PLAN_THEME_FALLBACK[planKey] || PLAN_THEME_FALLBACK.free;
+  const serverTemplates = Array.isArray(agency.templates) ? agency.templates : [];
+  const allowed = new Set([...serverTemplates, ...fallbackTemplates]);
   Array.from(themeSelect.options).forEach((option) => {
     option.disabled = !allowed.has(option.value);
   });
