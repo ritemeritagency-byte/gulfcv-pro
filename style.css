@@ -997,7 +997,7 @@ button:active {
   font-weight: 700;
   letter-spacing: 0.03em;
   color: #fff;
-  background: linear-gradient(120deg, var(--brand-2) 0%, var(--brand) 58%, #3d66b8 100%);
+  background: linear-gradient(120deg, var(--brand-2) 0%, var(--brand) 58%, var(--brand-2) 100%);
   box-shadow: 0 8px 18px rgba(18, 38, 74, 0.18);
 }
 
@@ -1090,7 +1090,7 @@ button:active {
 }
 
 .section-row td {
-  background: linear-gradient(135deg, var(--brand), #2a57a8);
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
   color: #fff;
   font-weight: 700;
   font-size: 14px;
@@ -2200,13 +2200,13 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
   .brand-left h2,
   .brand-left p,
   .brand-left .ar {
-    color: #1a3963 !important;
+    color: var(--brand-2) !important;
   }
 
   .paper-head {
-    border: 1px solid #3f5f98;
-    background-color: #2f4f8f !important;
-    background-image: linear-gradient(120deg, #2b4580 0%, #3d66b8 58%, #5f7ec4 100%) !important;
+    border: 1px solid var(--brand-2);
+    background-color: var(--brand-2) !important;
+    background-image: linear-gradient(120deg, var(--brand-2) 0%, var(--brand) 58%, var(--brand-2) 100%) !important;
     box-shadow: none;
     color: #ffffff !important;
   }
