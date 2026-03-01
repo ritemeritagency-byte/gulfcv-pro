@@ -1,6 +1,4 @@
 (function initRuntimeConfig() {
-  const LOCAL_API_BASE = "http://localhost:3000/api";
-
   function normalizeApiBase(value) {
     const text = String(value || "").trim();
     if (!text) {
@@ -21,11 +19,6 @@
   }
 
   function detectDefaultApiBase() {
-    const host = window.location.hostname;
-    const isLocalHost = host === "localhost" || host === "127.0.0.1";
-    if (isLocalHost) {
-      return LOCAL_API_BASE;
-    }
     return normalizeApiBase(`${window.location.origin}/api`);
   }
 

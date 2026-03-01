@@ -1,4 +1,4 @@
-const API_BASE = window.GULFCV_RUNTIME?.apiBase || "http://localhost:3000/api";
+const API_BASE = window.GULFCV_RUNTIME?.apiBase || `/api`;
 
 const historyList = document.getElementById("historyList");
 const historyStatus = document.getElementById("historyStatus");
