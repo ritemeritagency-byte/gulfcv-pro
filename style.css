@@ -15,6 +15,9 @@
   --fs-doc-head: 14px;
   --local-accent: #1f4f94;
   --local-accent-dark: #183f75;
+  --doc-line: #748aab;
+  --doc-line-soft: #b9c7da;
+  --doc-fill: #f7faff;
 }
 
 * {
@@ -519,11 +522,13 @@ label {
 }
 
 .upload-visual {
-  border: 1px dashed #9cb4d8;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #f7faff, #edf3ff);
+  border: 1px dashed #90aed9;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 120% at 100% 0, rgba(94, 129, 196, 0.09), transparent 66%),
+    linear-gradient(180deg, #f9fcff, #edf3ff);
   min-height: 120px;
-  padding: 0.72rem 0.6rem;
+  padding: 0.76rem 0.62rem;
   display: grid;
   justify-items: center;
   align-content: center;
@@ -580,14 +585,16 @@ label {
 }
 
 .upload-tile:hover .upload-visual {
-  border-color: #6f98d8;
-  box-shadow: 0 8px 20px rgba(33, 72, 128, 0.14);
-  transform: translateY(-1px);
+  border-color: #5e90dc;
+  box-shadow: 0 10px 22px rgba(33, 72, 128, 0.15);
+  transform: translateY(-2px);
 }
 
 .upload-tile.has-file .upload-visual {
-  border-color: #5f9b7d;
-  background: linear-gradient(180deg, #f5fff9, #e9f8f0);
+  border-color: #5a9f7a;
+  background:
+    radial-gradient(110% 110% at 100% 0, rgba(42, 133, 95, 0.12), transparent 70%),
+    linear-gradient(180deg, #f5fff9, #e8f7ef);
 }
 
 .upload-tile.has-file .upload-file-name {
@@ -1018,26 +1025,44 @@ button:active {
 
 .cv-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--doc-line);
+  border-radius: 9px;
+  overflow: hidden;
+  background: #fff;
   margin-top: -1px;
   table-layout: fixed;
 }
 
 .cv-table th,
 .cv-table td {
-  border: 1px solid #111;
+  border-right: 1px solid var(--doc-line);
+  border-bottom: 1px solid var(--doc-line-soft);
   padding: 3px 5px;
   font-size: var(--fs-doc);
   line-height: 1.25;
   vertical-align: middle;
+  background: #fff;
+}
+
+.cv-table tr > *:last-child {
+  border-right: 0;
+}
+
+.cv-table tr:last-child > * {
+  border-bottom: 0;
 }
 
 .cv-table th {
   text-align: left;
+  font-weight: 700;
+  color: #223858;
 }
 
 .cv-table td {
   font-weight: 700;
+  color: #1d3556;
 }
 
 /* Keep 3-column rows balanced without constraining colspan section rows */
@@ -1059,7 +1084,7 @@ button:active {
 }
 
 .section-row td {
-  background: var(--brand);
+  background: linear-gradient(135deg, var(--brand), #2a57a8);
   color: #fff;
   font-weight: 700;
   font-size: 14px;
@@ -1067,6 +1092,12 @@ button:active {
   padding: 4px 7px;
   white-space: nowrap;
   line-height: 1.1;
+  border-bottom: 0;
+}
+
+.section-row + tr td,
+.section-row + tr th {
+  border-top: 1px solid var(--doc-line);
 }
 
 .section-row td > span:first-child {
@@ -1572,7 +1603,7 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
 }
 
 .lang-head th {
-  background: #edf1fb;
+  background: #edf3ff;
 }
 
 #lvPoor,
@@ -1585,14 +1616,20 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
 }
 
 .photo-card {
-  border: 1px solid #111;
-  padding: 5px;
+  border: 1px solid #c5d4ea;
+  border-radius: 14px;
+  padding: 6px;
   text-align: center;
+  background:
+    radial-gradient(140% 120% at 100% 0, rgba(71, 108, 173, 0.1), transparent 66%),
+    linear-gradient(180deg, #f9fbff, #eff4ff);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .photo-frame {
-  border: 1px solid #9ca8bf;
-  background: #eef2fa;
+  border: 1px solid #aebfd8;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #eef3fc, #e7eef9);
   overflow: hidden;
 }
 
@@ -1676,9 +1713,11 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
 }
 
 .photo-card p {
-  margin: 4px 0 0;
+  margin: 5px 0 0;
   font-size: 11px;
   font-weight: 700;
+  color: #2b486f;
+  letter-spacing: 0.01em;
 }
 
 .agency-footer {

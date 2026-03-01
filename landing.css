@@ -1252,6 +1252,30 @@ body[data-page="landing"] .brand {
   gap: 0.62rem;
 }
 
+body[data-page="landing"] .topbar-inner {
+  max-width: 1240px;
+  gap: 0.62rem;
+}
+
+body[data-page="landing"] .nav-main {
+  justify-content: center;
+  gap: 0.62rem;
+  padding: 0.05rem 0.14rem;
+}
+
+body[data-page="landing"] .nav-main a {
+  border-radius: 10px;
+  font-size: 0.77rem;
+  letter-spacing: 0.05em;
+  padding: 0.32rem 0.52rem;
+  border: 1px solid transparent;
+}
+
+body[data-page="landing"] .nav-main a:hover {
+  border-color: #c8d7ee;
+  background: #f6f9ff;
+}
+
 body[data-page="landing"] .brand-mark {
   width: 40px;
   height: 40px;
@@ -1381,19 +1405,39 @@ body[data-page="landing"] h1 {
   margin-top: 0.7rem;
 }
 
-body[data-page="landing"] .hero-photo-collage {
-  margin: 1.15rem auto 1rem;
-  width: min(920px, 100%);
+body[data-page="landing"] .hero-shell {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-areas:
-    "lead lead lead lead shot1 shot1"
-    "lead lead lead lead shot2 shot3"
-    "lead lead lead lead shot4 shot4";
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+body[data-page="landing"] .hero-copy {
+  text-align: left;
+}
+
+body[data-page="landing"] .hero-showcase {
+  margin: 0.08rem 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
   gap: 0.62rem;
 }
 
-body[data-page="landing"] .hero-shot {
+body[data-page="landing"] .hero-photo-column {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.62rem;
+}
+
+body[data-page="landing"] .hero-photo-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+body[data-page="landing"] .hero-card {
   margin: 0;
   border: 1px solid #cfddf2;
   border-radius: 14px;
@@ -1402,15 +1446,15 @@ body[data-page="landing"] .hero-shot {
   overflow: hidden;
 }
 
-body[data-page="landing"] .hero-shot img {
+body[data-page="landing"] .hero-card img {
   width: 100%;
   height: 100%;
-  min-height: 110px;
+  min-height: 96px;
   object-fit: cover;
   display: block;
 }
 
-body[data-page="landing"] .hero-shot figcaption {
+body[data-page="landing"] .hero-card figcaption {
   padding: 0.4rem 0.58rem 0.46rem;
   color: #2a486f;
   font-size: 0.72rem;
@@ -1420,28 +1464,31 @@ body[data-page="landing"] .hero-shot figcaption {
   text-transform: uppercase;
 }
 
-body[data-page="landing"] .hero-shot-lead {
-  grid-area: lead;
+body[data-page="landing"] .hero-template-card img {
+  min-height: 430px;
+  object-position: top center;
 }
 
-body[data-page="landing"] .hero-shot-lead img {
-  min-height: 352px;
+body[data-page="landing"] .hero-applicant-card img {
+  min-height: 316px;
 }
 
-body[data-page="landing"] .hero-shot:nth-of-type(2) {
-  grid-area: shot1;
+body[data-page="landing"] .hero-mini-card img {
+  min-height: 96px;
 }
 
-body[data-page="landing"] .hero-shot:nth-of-type(3) {
-  grid-area: shot2;
+body[data-page="landing"] .hero-points {
+  justify-content: flex-start;
+  margin-top: 1rem;
 }
 
-body[data-page="landing"] .hero-shot:nth-of-type(4) {
-  grid-area: shot3;
+body[data-page="landing"] .hero-ctas,
+body[data-page="landing"] .hero-stats {
+  justify-content: flex-start;
 }
 
-body[data-page="landing"] .hero-shot:nth-of-type(5) {
-  grid-area: shot4;
+body[data-page="landing"] .hero-stats {
+  margin-top: 1rem;
 }
 
 body[data-page="landing"] .hero-points span {
@@ -2116,16 +2163,30 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
     padding: 1.9rem 1.1rem 1.8rem;
   }
 
-  body[data-page="landing"] .hero-photo-collage {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas:
-      "lead lead"
-      "shot1 shot2"
-      "shot3 shot4";
+  body[data-page="landing"] .hero-shell {
+    grid-template-columns: 1fr;
   }
 
-  body[data-page="landing"] .hero-shot-lead img {
+  body[data-page="landing"] .hero-copy {
+    text-align: center;
+  }
+
+  body[data-page="landing"] .hero-points,
+  body[data-page="landing"] .hero-ctas,
+  body[data-page="landing"] .hero-stats {
+    justify-content: center;
+  }
+
+  body[data-page="landing"] .hero-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-page="landing"] .hero-template-card img {
     min-height: 300px;
+  }
+
+  body[data-page="landing"] .hero-applicant-card img {
+    min-height: 260px;
   }
 
   body[data-page="landing"] .foot-grid {
@@ -2143,23 +2204,30 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
     width: auto;
   }
 
-  body[data-page="landing"] .hero-photo-collage {
+  body[data-page="landing"] .hero-showcase {
     margin-top: 0.9rem;
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "lead"
-      "shot1"
-      "shot2"
-      "shot3"
-      "shot4";
   }
 
-  body[data-page="landing"] .hero-shot-lead img {
-    min-height: 240px;
+  body[data-page="landing"] .hero-template-card img {
+    min-height: 235px;
   }
 
-  body[data-page="landing"] .hero-shot img {
-    min-height: 170px;
+  body[data-page="landing"] .hero-photo-mini-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body[data-page="landing"] .hero-photo-mini-grid .hero-mini-card:last-child {
+    grid-column: span 2;
+  }
+
+  body[data-page="landing"] .hero-applicant-card img,
+  body[data-page="landing"] .hero-mini-card img {
+    min-height: 150px;
+  }
+
+  body[data-page="landing"] .nav-main a {
+    font-size: 0.73rem;
+    padding: 0.26rem 0.42rem;
   }
 
   body[data-page="landing"] .footer-spotlight {
