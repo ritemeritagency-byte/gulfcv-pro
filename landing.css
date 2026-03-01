@@ -1220,7 +1220,7 @@ body[data-page="landing"] .template-card:hover {
 
 body[data-page="landing"] {
   --landing-ink: #10264a;
-  --landing-muted: #566f95;
+  --landing-muted: #3f5e88;
   --landing-surface: #ffffff;
   --landing-brand: #2d8cff;
   --landing-accent: #ff6aa8;
@@ -1328,10 +1328,17 @@ body[data-page="landing"] h4 {
 body[data-page="landing"] .brand-copy span,
 body[data-page="landing"] .sub,
 body[data-page="landing"] .pricing-note,
+body[data-page="landing"] .plan-badge,
+body[data-page="landing"] .plan-copy,
+body[data-page="landing"] .plan-list,
+body[data-page="landing"] .price span,
+body[data-page="landing"] .pricing-footnote,
+body[data-page="landing"] .template-card p,
 body[data-page="landing"] .about-inner p,
 body[data-page="landing"] .value-grid p,
 body[data-page="landing"] .language-head p,
-body[data-page="landing"] .language-grid p {
+body[data-page="landing"] .language-grid p,
+body[data-page="landing"] .how-grid p {
   color: var(--landing-muted);
 }
 
@@ -1523,6 +1530,39 @@ body[data-page="landing"] .plan-list li::before {
   background: var(--landing-brand);
 }
 
+body[data-page="landing"] .plan-btn {
+  border-color: transparent;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2d8cff, #6f76ff 58%, #ff6aa8);
+  box-shadow: 0 10px 20px rgba(55, 97, 196, 0.22);
+}
+
+body[data-page="landing"] .plan-btn[data-plan="free"] {
+  background: linear-gradient(135deg, #5e7ba2, #4c678d);
+}
+
+body[data-page="landing"] .plan-btn[data-plan="starter"] {
+  background: linear-gradient(135deg, #2d8cff, #5e79ff);
+}
+
+body[data-page="landing"] .plan-btn[data-plan="growth"] {
+  background: linear-gradient(135deg, #5f72ff, #ff6aa8);
+}
+
+body[data-page="landing"] .plan-btn[data-plan="enterprise"] {
+  background: linear-gradient(135deg, #0f8c79, #147aa8);
+}
+
+body[data-page="landing"] .plan-btn:hover {
+  background: linear-gradient(135deg, #257de6, #6069e8 58%, #ea5f9a);
+  box-shadow: 0 14px 24px rgba(48, 86, 172, 0.3);
+}
+
+body[data-page="landing"] .plan-btn:focus-visible {
+  outline: 3px solid #9fb9ff;
+  outline-offset: 2px;
+}
+
 body[data-page="landing"] .about-inner {
   text-align: center;
   padding: 1.35rem 1.25rem;
@@ -1666,6 +1706,78 @@ body[data-page="landing"] .site-footer .nav-btn.primary {
 body[data-page="landing"] .footer-bottom .copy {
   margin-top: 0.4rem;
   color: #9ab3d6;
+}
+
+body[data-page="auth"] {
+  --auth-ink: #142d52;
+  --auth-muted: #48648d;
+  background:
+    radial-gradient(circle at 7% 8%, rgba(45, 140, 255, 0.2), transparent 34%),
+    radial-gradient(circle at 92% 90%, rgba(255, 106, 168, 0.17), transparent 38%),
+    linear-gradient(180deg, #f5f9ff 0%, #edf4ff 100%);
+}
+
+body[data-page="auth"] .topbar {
+  border-bottom-color: #cddbf0;
+  background: rgba(250, 253, 255, 0.94);
+}
+
+body[data-page="auth"] .brand strong {
+  color: var(--auth-ink);
+}
+
+body[data-page="auth"] .brand span,
+body[data-page="auth"] .auth-sub,
+body[data-page="auth"] .signed-in-note,
+body[data-page="auth"] .auth-alt-panel p {
+  color: var(--auth-muted);
+}
+
+body[data-page="auth"] .nav-main a {
+  color: #203454;
+  font-weight: 600;
+}
+
+body[data-page="auth"] .nav-main a:hover {
+  border-bottom-color: #ff6aa8;
+}
+
+body[data-page="auth"] .auth {
+  border-color: #d4e0f2;
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
+}
+
+body[data-page="auth"] .tabs button {
+  border-color: #cbdaf0;
+  background: #ffffff;
+  color: #1f406a;
+}
+
+body[data-page="auth"] .tabs button:not(.active):hover {
+  background: #edf4ff;
+}
+
+body[data-page="auth"] .nav-btn.primary,
+body[data-page="auth"] .mobile-side-actions .nav-btn.primary,
+body[data-page="auth"] form button[type="submit"],
+body[data-page="auth"] .tabs button.active {
+  border-color: transparent;
+  background: linear-gradient(135deg, #2d8cff, #6f76ff 58%, #ff6aa8);
+  color: #ffffff;
+}
+
+body[data-page="auth"] .auth-link-btn {
+  color: #2f6ed0;
+}
+
+body[data-page="auth"] .auth-link-btn:hover {
+  color: #245db5;
+}
+
+body[data-page="auth"] .tabs button:focus-visible,
+body[data-page="auth"] form button[type="submit"]:focus-visible {
+  outline: 3px solid #9fb9ff;
+  outline-offset: 2px;
 }
 
 @keyframes landingFadeRise {
