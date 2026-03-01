@@ -972,15 +972,15 @@ form button[type="submit"] {
 }
 
 body[data-page="landing"] {
-  --landing-ink: #0f233d;
-  --landing-muted: #51627f;
+  --landing-ink: #10264a;
+  --landing-muted: #566f95;
   --landing-surface: #ffffff;
-  --landing-brand: #0c7b69;
-  --landing-accent: #b38027;
+  --landing-brand: #2d8cff;
+  --landing-accent: #ff6aa8;
   background:
-    radial-gradient(circle at 8% 8%, #d8e8ff 0, transparent 34%),
-    radial-gradient(circle at 90% 88%, #d7f5ea 0, transparent 36%),
-    linear-gradient(180deg, #f1f6fb, #eaf2f9);
+    radial-gradient(circle at 8% 8%, #d8ebff 0, transparent 34%),
+    radial-gradient(circle at 90% 88%, #ffddec 0, transparent 36%),
+    linear-gradient(180deg, #f4f8ff, #eef4ff);
 }
 
 body[data-page="landing"] .topbar {
@@ -1005,14 +1005,21 @@ body[data-page="landing"] .nav-main a:hover {
   border-bottom-color: var(--landing-accent);
 }
 
+body[data-page="landing"] .topbar .nav-btn.primary,
+body[data-page="landing"] .mobile-side-actions .nav-btn.primary {
+  border-color: #5f8fff;
+  background: linear-gradient(135deg, #2d8cff, #6f76ff 58%, #ff6aa8);
+  box-shadow: 0 10px 22px rgba(77, 121, 246, 0.24);
+}
+
 body[data-page="landing"] .hero {
   padding-top: 3.4rem;
 }
 
 body[data-page="landing"] .hero-content {
   background:
-    radial-gradient(1200px 320px at 5% 0%, rgba(12, 123, 105, 0.09), transparent 60%),
-    radial-gradient(900px 340px at 95% 100%, rgba(179, 128, 39, 0.1), transparent 60%),
+    radial-gradient(1200px 320px at 5% 0%, rgba(45, 140, 255, 0.12), transparent 60%),
+    radial-gradient(900px 340px at 95% 100%, rgba(255, 106, 168, 0.11), transparent 60%),
     var(--landing-surface);
   border-color: #cedcf0;
   box-shadow: 0 24px 54px rgba(15, 35, 61, 0.13);
@@ -1212,16 +1219,16 @@ body[data-page="landing"] .template-card:hover {
 }
 
 body[data-page="landing"] {
-  --landing-ink: #0f1f37;
-  --landing-muted: #4d6384;
+  --landing-ink: #10264a;
+  --landing-muted: #566f95;
   --landing-surface: #ffffff;
-  --landing-brand: #0b8c79;
-  --landing-accent: #f59f3a;
-  --landing-line: #d0ddf0;
+  --landing-brand: #2d8cff;
+  --landing-accent: #ff6aa8;
+  --landing-line: #d7e4ff;
   background:
     radial-gradient(circle at 6% 8%, rgba(94, 150, 235, 0.24), transparent 34%),
-    radial-gradient(circle at 94% 95%, rgba(11, 140, 121, 0.2), transparent 38%),
-    linear-gradient(180deg, #f4f8fc 0%, #edf4fb 40%, #e8f1f9 100%);
+    radial-gradient(circle at 94% 95%, rgba(255, 106, 168, 0.2), transparent 38%),
+    linear-gradient(180deg, #f5f9ff 0%, #eef4ff 40%, #e9f1ff 100%);
 }
 
 body[data-page="landing"] .topbar {
@@ -1236,7 +1243,7 @@ body[data-page="landing"] .topbar::after {
   right: 0;
   bottom: -1px;
   height: 2px;
-  background: linear-gradient(90deg, rgba(11, 140, 121, 0.86), rgba(29, 119, 170, 0.8), rgba(245, 159, 58, 0.74));
+  background: linear-gradient(90deg, rgba(45, 140, 255, 0.86), rgba(112, 118, 255, 0.8), rgba(255, 106, 168, 0.74));
   opacity: 0.65;
 }
 
@@ -1253,7 +1260,7 @@ body[data-page="landing"] .brand-mark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, #0b8c79, #1d77aa 62%, #f59f3a);
+  background: linear-gradient(145deg, #2d8cff, #6f76ff 62%, #ff6aa8);
   box-shadow: 0 10px 20px rgba(10, 31, 55, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.52);
 }
@@ -1298,9 +1305,9 @@ body[data-page="landing"] .brand-pill {
   align-items: center;
   padding: 0.25rem 0.54rem;
   border-radius: 999px;
-  border: 1px solid #c9dbf0;
-  background: linear-gradient(135deg, #ffffff, #edf6ff);
-  color: #214368;
+  border: 1px solid #d6dfff;
+  background: linear-gradient(135deg, #ffffff, #f1f3ff 55%, #ffeaf2);
+  color: #2e4272;
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -1340,8 +1347,8 @@ body[data-page="landing"] .hero-content {
   border-color: var(--landing-line);
   padding: 2.35rem 1.5rem 2.2rem;
   background:
-    radial-gradient(860px 340px at -8% -18%, rgba(11, 140, 121, 0.18), transparent 60%),
-    radial-gradient(860px 360px at 110% 120%, rgba(245, 159, 58, 0.2), transparent 62%),
+    radial-gradient(860px 340px at -8% -18%, rgba(45, 140, 255, 0.2), transparent 60%),
+    radial-gradient(860px 360px at 110% 120%, rgba(255, 106, 168, 0.18), transparent 62%),
     linear-gradient(180deg, #ffffff 0%, #f7fbff 62%, #f2f8ff 100%);
   box-shadow: 0 26px 56px rgba(15, 35, 61, 0.15);
 }
@@ -1376,8 +1383,8 @@ body[data-page="landing"] .hero-points span {
 
 body[data-page="landing"] .cta {
   border-radius: 12px;
-  background: linear-gradient(135deg, #0b8c79, #1a6fa5);
-  box-shadow: 0 12px 28px rgba(12, 103, 138, 0.25);
+  background: linear-gradient(135deg, #2d8cff, #6f76ff 58%, #ff6aa8);
+  box-shadow: 0 12px 28px rgba(77, 121, 246, 0.3);
 }
 
 body[data-page="landing"] .cta-soft {
@@ -1481,10 +1488,11 @@ body[data-page="landing"] .plan {
 }
 
 body[data-page="landing"] .plan.featured {
-  border-color: #67bda5;
+  border-color: #a4beff;
   background:
-    radial-gradient(120% 140% at 100% 0%, rgba(11, 140, 121, 0.12), transparent 65%),
-    linear-gradient(180deg, #ffffff 0%, #f1fafe 100%);
+    radial-gradient(120% 140% at 100% 0%, rgba(255, 106, 168, 0.13), transparent 65%),
+    radial-gradient(120% 140% at 0% 100%, rgba(45, 140, 255, 0.11), transparent 70%),
+    linear-gradient(180deg, #ffffff 0%, #f3f7ff 100%);
 }
 
 body[data-page="landing"] .plan-copy {
@@ -1547,7 +1555,7 @@ body[data-page="landing"] .how-grid span {
   width: 38px;
   height: 38px;
   font-size: 0.96rem;
-  background: linear-gradient(135deg, #0b8c79, #1d77aa);
+  background: linear-gradient(135deg, #2d8cff, #6f76ff 60%, #ff6aa8);
 }
 
 body[data-page="landing"] .how-grid p {
@@ -1560,9 +1568,9 @@ body[data-page="landing"] .site-footer {
   padding: 2rem 1rem 1.35rem;
   border-top: 0;
   background:
-    radial-gradient(120% 170% at 0% 100%, rgba(11, 140, 121, 0.28), transparent 65%),
-    radial-gradient(130% 170% at 100% 0%, rgba(245, 159, 58, 0.18), transparent 70%),
-    linear-gradient(180deg, #0e1f38 0%, #0a172d 100%);
+    radial-gradient(120% 170% at 0% 100%, rgba(45, 140, 255, 0.3), transparent 65%),
+    radial-gradient(130% 170% at 100% 0%, rgba(255, 106, 168, 0.22), transparent 70%),
+    linear-gradient(180deg, #0f2143 0%, #0b1833 100%);
   color: #d4e1f3;
 }
 
@@ -1582,7 +1590,7 @@ body[data-page="landing"] .site-footer {
 }
 
 .footer-spotlight .eyebrow {
-  color: #6de1cb;
+  color: #ff9ac7;
   margin-bottom: 0.42rem;
 }
 
@@ -1614,7 +1622,7 @@ body[data-page="landing"] .site-footer .nav-btn {
 
 body[data-page="landing"] .site-footer .nav-btn.primary {
   border-color: transparent;
-  background: linear-gradient(135deg, #0b8c79, #1a6fa5);
+  background: linear-gradient(135deg, #2d8cff, #6f76ff 58%, #ff6aa8);
 }
 
 .foot-grid {
