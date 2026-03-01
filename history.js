@@ -141,7 +141,12 @@ historyLogoutBtn?.addEventListener("click", async () => {
 
 async function init() {
   try {
-    await api("/auth/me");
+    const { agency } = await api("/auth/me");
+    const nextPath = window.GULFCV_ONBOARDING?.getNextPathForAgency(agency) || "/dashboard";
+    if (!String(nextPath).startsWith("/dashboard")) {
+      window.location.href = nextPath;
+      return;
+    }
     await loadPage(1);
   } catch {
     window.location.href = "/auth?mode=signin";

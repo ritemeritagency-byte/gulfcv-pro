@@ -51,6 +51,8 @@ const docAdjustTarget = document.getElementById("docAdjustTarget");
 const docZoomInput = document.getElementById("docZoom");
 const docOffsetXInput = document.getElementById("docOffsetX");
 const docOffsetYInput = document.getElementById("docOffsetY");
+const passportPhotoCard = document.getElementById("passportPhotoCard");
+const fullPhotoCard = document.getElementById("fullPhotoCard");
 const localModePanel = document.getElementById("localModePanel");
 const localAccentSelect = document.getElementById("localAccentColor");
 const phLanguageList = document.getElementById("phLanguageList");
@@ -76,12 +78,19 @@ const inlineListEditors = [
   { targetId: "phLanguageList", inputName: "localLanguages", localInputName: "localLanguages" }
 ];
 const DRAFT_STORAGE_KEY_PREFIX = "gcc_cv_draft_";
+const UPLOAD_DRAFT_DB_NAME = "gcc_cv_upload_drafts";
+const UPLOAD_DRAFT_DB_VERSION = 1;
+const UPLOAD_DRAFT_STORE_NAME = "uploads";
+const MAX_PERSISTED_UPLOAD_BYTES = 8 * 1024 * 1024;
 
 let currentAgency = null;
 let lastRecordedCvKey = "";
 let selectedScanFile = null;
 let tesseractLoaderPromise = null;
 let draftSaveTimer = null;
+let uploadDraftDbPromise = null;
+const uploadState = new Map();
+const uploadSaveVersion = new Map();
 const DEFAULT_DOC_ADJUST_STATE = {
   passportCopyPreview: { zoom: 100, x: 0, y: 0 },
   certificate1Preview: { zoom: 100, x: 0, y: 0 },
@@ -554,6 +563,14 @@ function sanitizeText(text) {
 function sanitizeRecordId(value) {
   const clean = String(value || "").trim();
   return /^[a-zA-Z0-9-]{8,80}$/.test(clean) ? clean : "";
+}
+
+function getOnboardingRedirectPath(agency) {
+  return window.GULFCV_ONBOARDING?.getRedirectForCurrentPage(
+    agency,
+    window.location.pathname,
+    window.location.search
+  ) || "";
 }
 
 function getDraftStorageKey() {
@@ -1516,7 +1533,37 @@ function updateLocalCvFields() {
 }
 
 function setPreviewSource(previewEl, src) {
+  const prevBlobUrl = previewEl.dataset.blobUrl || "";
+  if (prevBlobUrl.startsWith("blob:")) {
+    URL.revokeObjectURL(prevBlobUrl);
+  }
+  if (src && src.startsWith("blob:")) {
+    previewEl.dataset.blobUrl = src;
+  } else {
+    delete previewEl.dataset.blobUrl;
+  }
   previewEl.src = src;
+}
+
+function getUploadStateForInput(input) {
+  if (!input?.id) {
+    return null;
+  }
+  return uploadState.get(input.id) || null;
+}
+
+function getSelectedUploadForInput(input) {
+  const liveFile = input?.files && input.files[0] ? input.files[0] : null;
+  if (liveFile) {
+    return {
+      name: liveFile.name,
+      type: liveFile.type,
+      size: Number(liveFile.size || 0),
+      lastModified: Number(liveFile.lastModified || 0),
+      dataUrl: null
+    };
+  }
+  return getUploadStateForInput(input);
 }
 
 function updateUploadTileState(input) {
@@ -1526,11 +1573,11 @@ function updateUploadTileState(input) {
   }
   const fileNameEl = tile.querySelector(".upload-file-name");
   const emptyText = tile.dataset.emptyText || "No file selected";
-  const file = input?.files && input.files[0] ? input.files[0] : null;
-  if (file) {
+  const selected = getSelectedUploadForInput(input);
+  if (selected) {
     tile.classList.add("has-file");
     if (fileNameEl) {
-      fileNameEl.textContent = file.name;
+      fileNameEl.textContent = selected.name || emptyText;
     }
     return;
   }
@@ -1541,21 +1588,229 @@ function updateUploadTileState(input) {
 }
 
 function bindFileInput(input, previewEls, label, width, height) {
-  const file = input.files && input.files[0];
-  if (!file) {
+  const selected = getSelectedUploadForInput(input);
+  if (!selected) {
     const fallback = makePlaceholder(label, width, height);
     previewEls.forEach((previewEl) => setPreviewSource(previewEl, fallback));
     return;
   }
 
-  if (!file.type.startsWith("image/")) {
-    const fallback = makePlaceholder(`${label}: ${file.name}`, width, height);
+  const type = String(selected.type || "");
+  if (!type.startsWith("image/")) {
+    const fallback = makePlaceholder(`${label}: ${selected.name || "file"}`, width, height);
     previewEls.forEach((previewEl) => setPreviewSource(previewEl, fallback));
     return;
   }
 
-  const blobUrl = URL.createObjectURL(file);
+  if (selected.dataUrl) {
+    previewEls.forEach((previewEl) => setPreviewSource(previewEl, selected.dataUrl));
+    return;
+  }
+
+  const liveFile = input.files && input.files[0] ? input.files[0] : null;
+  if (!liveFile) {
+    const fallback = makePlaceholder(label, width, height);
+    previewEls.forEach((previewEl) => setPreviewSource(previewEl, fallback));
+    return;
+  }
+  const blobUrl = URL.createObjectURL(liveFile);
   previewEls.forEach((previewEl) => setPreviewSource(previewEl, blobUrl));
+}
+
+function getUploadStorageRecordKey(inputId) {
+  const agencyId = String(currentAgency?.id || "");
+  const cleanInputId = String(inputId || "").trim();
+  if (!agencyId || !cleanInputId) {
+    return "";
+  }
+  return `${agencyId}:${cleanInputId}`;
+}
+
+function openUploadDraftDb() {
+  if (uploadDraftDbPromise) {
+    return uploadDraftDbPromise;
+  }
+  if (typeof window === "undefined" || !window.indexedDB) {
+    uploadDraftDbPromise = Promise.resolve(null);
+    return uploadDraftDbPromise;
+  }
+  uploadDraftDbPromise = new Promise((resolve) => {
+    const request = window.indexedDB.open(UPLOAD_DRAFT_DB_NAME, UPLOAD_DRAFT_DB_VERSION);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(UPLOAD_DRAFT_STORE_NAME)) {
+        db.createObjectStore(UPLOAD_DRAFT_STORE_NAME, { keyPath: "id" });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => resolve(null);
+  });
+  return uploadDraftDbPromise;
+}
+
+function runUploadStoreRequest(mode, action) {
+  return openUploadDraftDb().then((db) => {
+    if (!db) {
+      return null;
+    }
+    return new Promise((resolve) => {
+      const tx = db.transaction(UPLOAD_DRAFT_STORE_NAME, mode);
+      const store = tx.objectStore(UPLOAD_DRAFT_STORE_NAME);
+      action(store, resolve);
+      tx.onerror = () => resolve(null);
+      tx.onabort = () => resolve(null);
+    });
+  });
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(new Error("Could not read upload file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function persistUploadState(inputId, state) {
+  const recordKey = getUploadStorageRecordKey(inputId);
+  if (!recordKey || !state) {
+    return Promise.resolve();
+  }
+  const record = {
+    id: recordKey,
+    agencyId: String(currentAgency.id),
+    inputId: String(inputId),
+    name: String(state.name || ""),
+    type: String(state.type || ""),
+    size: Number(state.size || 0),
+    lastModified: Number(state.lastModified || 0),
+    dataUrl: String(state.dataUrl || ""),
+    updatedAt: new Date().toISOString()
+  };
+  return runUploadStoreRequest("readwrite", (store, resolve) => {
+    const req = store.put(record);
+    req.onsuccess = () => resolve(true);
+    req.onerror = () => resolve(null);
+  }).then(() => {});
+}
+
+function removePersistedUpload(inputId) {
+  const recordKey = getUploadStorageRecordKey(inputId);
+  if (!recordKey) {
+    return Promise.resolve();
+  }
+  return runUploadStoreRequest("readwrite", (store, resolve) => {
+    const req = store.delete(recordKey);
+    req.onsuccess = () => resolve(true);
+    req.onerror = () => resolve(null);
+  }).then(() => {});
+}
+
+function clearPersistedUploadsForCurrentAgency() {
+  if (!currentAgency?.id) {
+    return Promise.resolve();
+  }
+  return runUploadStoreRequest("readwrite", (store, resolve) => {
+    const req = store.getAll();
+    req.onsuccess = () => {
+      const agencyId = String(currentAgency.id);
+      const records = Array.isArray(req.result) ? req.result : [];
+      records
+        .filter((record) => String(record?.agencyId || "") === agencyId)
+        .forEach((record) => {
+          if (record?.id) {
+            store.delete(record.id);
+          }
+        });
+      resolve(true);
+    };
+    req.onerror = () => resolve(null);
+  }).then(() => {});
+}
+
+async function saveUploadSelection(input) {
+  if (isRecordPreviewMode || !currentAgency || !input?.id) {
+    return;
+  }
+  const nextVersion = Number(uploadSaveVersion.get(input.id) || 0) + 1;
+  uploadSaveVersion.set(input.id, nextVersion);
+  const file = input.files && input.files[0] ? input.files[0] : null;
+  if (!file) {
+    uploadState.delete(input.id);
+    await removePersistedUpload(input.id);
+    return;
+  }
+
+  if (file.size > MAX_PERSISTED_UPLOAD_BYTES) {
+    uploadState.delete(input.id);
+    await removePersistedUpload(input.id);
+    return;
+  }
+
+  try {
+    const dataUrl = await readFileAsDataUrl(file);
+    if (uploadSaveVersion.get(input.id) !== nextVersion) {
+      return;
+    }
+    const state = {
+      name: file.name,
+      type: file.type,
+      size: Number(file.size || 0),
+      lastModified: Number(file.lastModified || 0),
+      dataUrl
+    };
+    uploadState.set(input.id, state);
+    await persistUploadState(input.id, state);
+  } catch {
+    uploadState.delete(input.id);
+    await removePersistedUpload(input.id);
+  }
+}
+
+function clearUploadStateMemory() {
+  uploadState.clear();
+  uploadSaveVersion.clear();
+}
+
+function restorePersistedUploads() {
+  if (isRecordPreviewMode || !currentAgency?.id) {
+    return Promise.resolve();
+  }
+  return runUploadStoreRequest("readonly", (store, resolve) => {
+    const req = store.getAll();
+    req.onsuccess = () => {
+      const agencyId = String(currentAgency.id);
+      const records = Array.isArray(req.result) ? req.result : [];
+      records
+        .filter((record) => String(record?.agencyId || "") === agencyId)
+        .forEach((record) => {
+          const inputId = String(record?.inputId || "");
+          if (!inputId) {
+            return;
+          }
+          uploadState.set(inputId, {
+            name: String(record?.name || ""),
+            type: String(record?.type || ""),
+            size: Number(record?.size || 0),
+            lastModified: Number(record?.lastModified || 0),
+            dataUrl: String(record?.dataUrl || "")
+          });
+        });
+      resolve(true);
+    };
+    req.onerror = () => resolve(null);
+  }).then(() => {
+    uploadBindings.forEach((binding) => {
+      if (!binding.input) {
+        return;
+      }
+      const previews = binding.previewIds.map((id) => document.getElementById(id)).filter(Boolean);
+      bindFileInput(binding.input, previews, binding.label, binding.width, binding.height);
+      updateUploadTileState(binding.input);
+    });
+    updateSupportingPagesVisibility();
+  });
 }
 
 function applyPhotoTransform(previewIds, zoomInput, offsetXInput, offsetYInput) {
@@ -1577,6 +1832,135 @@ function applyPhotoTransform(previewIds, zoomInput, offsetXInput, offsetYInput) 
 function updatePhotoAdjustments() {
   applyPhotoTransform(["passportPhotoPreview"], passportZoomInput, passportOffsetXInput, passportOffsetYInput);
   applyPhotoTransform(["fullPhotoPreview", "phLocalPhotoPreview"], fullZoomInput, fullOffsetXInput, fullOffsetYInput);
+}
+
+function clampToInputRange(input, value) {
+  if (!input) {
+    return Number(value || 0);
+  }
+  const min = Number(input.min || Number.NEGATIVE_INFINITY);
+  const max = Number(input.max || Number.POSITIVE_INFINITY);
+  const next = Number(value || 0);
+  return Math.min(max, Math.max(min, next));
+}
+
+function initSinglePreviewPhotoEditor({
+  card,
+  fileInput,
+  zoomInput,
+  offsetXInput,
+  offsetYInput
+}) {
+  if (!card || !fileInput || !zoomInput || !offsetXInput || !offsetYInput) {
+    return;
+  }
+  const frame = card.querySelector(".photo-frame");
+  if (!frame || frame.dataset.photoEditorInit === "1") {
+    return;
+  }
+  frame.dataset.photoEditorInit = "1";
+  frame.classList.add("is-photo-editable");
+  frame.dataset.editHint = "Click replace | Drag move | Wheel zoom";
+  frame.setAttribute("tabindex", "0");
+  frame.setAttribute("role", "button");
+  frame.setAttribute("aria-label", `Edit ${fileInput.id === "passportPhotoInput" ? "passport photo" : "full body photo"}`);
+
+  let dragState = null;
+
+  const openFilePicker = () => {
+    fileInput.click();
+  };
+
+  const endDrag = (event) => {
+    if (!dragState || (event && event.pointerId !== dragState.pointerId)) {
+      return;
+    }
+    const shouldOpenPicker = !dragState.moved || !dragState.hadUpload;
+    dragState = null;
+    frame.classList.remove("is-dragging-photo");
+    if (shouldOpenPicker) {
+      openFilePicker();
+    }
+  };
+
+  frame.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+    dragState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      baseX: Number(offsetXInput.value || 0),
+      baseY: Number(offsetYInput.value || 0),
+      hadUpload: Boolean(getSelectedUploadForInput(fileInput)),
+      moved: false
+    };
+    frame.classList.add("is-dragging-photo");
+    frame.setPointerCapture(event.pointerId);
+    event.preventDefault();
+  });
+
+  frame.addEventListener("pointermove", (event) => {
+    if (!dragState || event.pointerId !== dragState.pointerId || !dragState.hadUpload) {
+      return;
+    }
+    const dx = event.clientX - dragState.startX;
+    const dy = event.clientY - dragState.startY;
+    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+      dragState.moved = true;
+    }
+    offsetXInput.value = String(clampToInputRange(offsetXInput, Math.round(dragState.baseX + dx)));
+    offsetYInput.value = String(clampToInputRange(offsetYInput, Math.round(dragState.baseY + dy)));
+    updatePhotoAdjustments();
+    queueDraftSave();
+  });
+
+  frame.addEventListener("pointerup", endDrag);
+  frame.addEventListener("pointercancel", endDrag);
+
+  frame.addEventListener("wheel", (event) => {
+    if (!getSelectedUploadForInput(fileInput)) {
+      return;
+    }
+    event.preventDefault();
+    const step = event.deltaY < 0 ? 3 : -3;
+    const current = Number(zoomInput.value || 100);
+    const next = clampToInputRange(zoomInput, current + step);
+    if (next === current) {
+      return;
+    }
+    zoomInput.value = String(next);
+    updatePhotoAdjustments();
+    queueDraftSave();
+  }, { passive: false });
+
+  frame.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openFilePicker();
+    }
+  });
+}
+
+function initPreviewPhotoDirectEditing() {
+  if (isRecordPreviewMode) {
+    return;
+  }
+  initSinglePreviewPhotoEditor({
+    card: passportPhotoCard,
+    fileInput: passportPhotoInput,
+    zoomInput: passportZoomInput,
+    offsetXInput: passportOffsetXInput,
+    offsetYInput: passportOffsetYInput
+  });
+  initSinglePreviewPhotoEditor({
+    card: fullPhotoCard,
+    fileInput: fullPhotoInput,
+    zoomInput: fullZoomInput,
+    offsetXInput: fullOffsetXInput,
+    offsetYInput: fullOffsetYInput
+  });
 }
 
 function applyDocumentTransform(targetId) {
@@ -1645,8 +2029,10 @@ function initUploadBindings() {
     const previews = binding.previewIds.map((id) => document.getElementById(id)).filter(Boolean);
     binding.input.addEventListener("change", () => {
       bindFileInput(binding.input, previews, binding.label, binding.width, binding.height);
+      void saveUploadSelection(binding.input);
       updateUploadTileState(binding.input);
       updateSupportingPagesVisibility();
+      queueDraftSave();
     });
     updateUploadTileState(binding.input);
   });
@@ -1659,7 +2045,7 @@ function updateSupportingPagesVisibility() {
     if (!page) {
       return;
     }
-    const hasFile = Boolean(input && input.files && input.files[0]);
+    const hasFile = Boolean(getSelectedUploadForInput(input));
     page.style.display = hasFile ? "block" : "none";
     if (hasFile) {
       hasAny = true;
@@ -1934,6 +2320,16 @@ function buildCvKey() {
       parts.push(`${key}:${String(value).trim()}`);
     }
   }
+  uploadBindings.forEach((binding) => {
+    if (!binding.input?.id) {
+      return;
+    }
+    const selected = getSelectedUploadForInput(binding.input);
+    if (!selected) {
+      return;
+    }
+    parts.push(`upload:${binding.input.id}:${selected.name}:${selected.size}:${selected.lastModified}`);
+  });
   parts.sort();
   parts.push(`agency:${currentAgency?.id || ""}`);
   parts.push(`theme:${document.body.dataset.theme || "classic"}`);
@@ -2077,6 +2473,8 @@ resetButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     form.reset();
     lastRecordedCvKey = "";
+    clearUploadStateMemory();
+    void clearPersistedUploadsForCurrentAgency();
     setAllUploadFallbacks();
     if (currentAgency) {
       applyAgencyLogosFromProfile(currentAgency);
@@ -2186,16 +2584,24 @@ initScanImport();
 async function init() {
   try {
     const { agency } = await api("/auth/me");
+    const onboardingRedirect = getOnboardingRedirectPath(agency);
+    if (onboardingRedirect && !onboardingRedirect.startsWith("/dashboard")) {
+      window.location.href = onboardingRedirect;
+      return;
+    }
     currentAgency = agency;
+    clearUploadStateMemory();
     
     updateUsageChip(currentAgency);
     applyAgencyDefaults(currentAgency);
     enforceTemplateAccess(currentAgency);
 
     initUploadBindings();
+    initPreviewPhotoDirectEditing();
     initDocAdjustControls();
     setAllUploadFallbacks();
     applyAgencyLogosFromProfile(currentAgency);
+    await restorePersistedUploads();
     updateSupportingPagesVisibility();
     restoreDraftFromLocal();
     initPreviewInlineEditing();
@@ -2217,4 +2623,3 @@ async function init() {
 }
 
 init();
-

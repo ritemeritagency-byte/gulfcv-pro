@@ -26,10 +26,11 @@ function setMessage(text, ok = false) {
 async function loadAgency() {
   try {
     const { agency } = await api("/auth/me");
+    const nextPath = window.GULFCV_ONBOARDING?.getNextPathForAgency(agency) || "/dashboard";
     document.getElementById("subInfo").textContent =
       `Agency: ${agency.agencyName} | Plan: ${agency.planName} | Status: ${agency.subscriptionStatus}`;
-    if (agency.subscriptionStatus === "active") {
-      window.location.href = "/dashboard";
+    if (!String(nextPath).startsWith("/subscription")) {
+      window.location.href = nextPath;
     }
   } catch {
     window.location.href = "/landing";

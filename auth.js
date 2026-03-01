@@ -25,6 +25,10 @@ function setMessage(text, ok = false) {
   el.textContent = text;
 }
 
+function getPostLoginPath(agency) {
+  return window.GULFCV_ONBOARDING?.getNextPathForAgency(agency) || "/dashboard";
+}
+
 function setTab(signupMode) {
   const loginTab = document.getElementById("showLogin");
   const signupTab = document.getElementById("showSignup");
@@ -208,10 +212,13 @@ function renderNav(agency) {
   }
 
   const safeAgencyName = escapeHtml(agency.agencyName || "Agency");
+  const targetPath = getPostLoginPath(agency);
+  const isSetupPending = !String(targetPath).startsWith("/dashboard");
+  const primaryLabel = isSetupPending ? "Continue Setup" : "Dashboard";
   const html = `
     <span class="nav-chip">${safeAgencyName}</span>
-    <a class="nav-btn" href="/profile">Profile</a>
-    <a class="nav-btn primary" href="/dashboard">Dashboard</a>
+    <a class="nav-btn" href="/profile${isSetupPending ? "?onboarding=1" : ""}">Profile</a>
+    <a class="nav-btn primary" href="${escapeHtml(targetPath)}">${primaryLabel}</a>
     <button type="button" class="nav-btn ghost js-logout-btn">Sign Out</button>
   `;
   navs.forEach((nav) => {
@@ -229,6 +236,10 @@ async function refreshAuthState() {
   try {
     const { agency } = await api("/auth/me");
     currentAgency = agency;
+    if (PAGE === "auth") {
+      window.location.href = getPostLoginPath(agency);
+      return;
+    }
     renderNav(agency);
     setAuthView(agency);
   } catch {
@@ -275,7 +286,7 @@ document.getElementById("panelLogoutBtn")?.addEventListener("click", () => {
 document.querySelectorAll(".plan-btn").forEach((button) => {
   button.addEventListener("click", () => {
     if (currentAgency) {
-      window.location.href = "/dashboard";
+      window.location.href = getPostLoginPath(currentAgency);
       return;
     }
     const plan = button.dataset.plan || "free";
@@ -298,9 +309,10 @@ document.getElementById("signupForm")?.addEventListener("submit", async (event) 
     currentAgency = agency;
     renderNav(agency);
     setAuthView(agency);
-    setMessage("Account created. Redirecting to dashboard...", true);
+    const nextPath = getPostLoginPath(agency);
+    setMessage("Account created. Redirecting...", true);
     setTimeout(() => {
-      window.location.href = "/dashboard";
+      window.location.href = nextPath;
     }, 500);
   } catch (error) {
     const msg = (error.message || "").toLowerCase().includes("fetch")
@@ -323,7 +335,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async (event) =
     currentAgency = agency;
     renderNav(agency);
     setAuthView(agency);
-    window.location.href = "/dashboard";
+    window.location.href = getPostLoginPath(agency);
   } catch (error) {
     const msg = (error.message || "").toLowerCase().includes("fetch")
       ? "Cannot reach API. Check backend URL and server status."

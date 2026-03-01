@@ -1596,6 +1596,45 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
   overflow: hidden;
 }
 
+.photo-frame.is-photo-editable {
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+}
+
+.photo-frame.is-photo-editable.is-dragging-photo,
+.photo-frame.is-photo-editable:active {
+  cursor: grabbing;
+}
+
+.photo-frame.is-photo-editable::after {
+  content: attr(data-edit-hint);
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(163, 182, 212, 0.8);
+  background: rgba(244, 248, 255, 0.9);
+  color: #1a355d;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+  pointer-events: none;
+}
+
+.photo-frame.is-photo-editable:hover::after,
+.photo-frame.is-photo-editable:focus-visible::after,
+.photo-frame.is-photo-editable.is-dragging-photo::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .photo-card img {
   width: 100%;
   height: 130px;
@@ -2092,6 +2131,10 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+  }
+
+  .photo-frame.is-photo-editable::after {
+    display: none;
   }
 
   #cvPreview .agency-footer {

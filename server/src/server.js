@@ -41,6 +41,14 @@ const PLAN_CONFIG = {
   }
 };
 
+const ONBOARDING_STEPS = ["welcome", "profile", "checklist", "completed"];
+const ONBOARDING_CHECKLIST_KEYS = ["branding", "templateSetup", "workflowTraining"];
+const DEFAULT_ONBOARDING_CHECKLIST = Object.freeze({
+  branding: false,
+  templateSetup: false,
+  workflowTraining: false
+});
+
 function parseBooleanEnv(value, fallback = false) {
   if (typeof value !== "string") {
     return fallback;
@@ -92,6 +100,60 @@ function sanitizeText(value, maxLength = 200) {
 
 function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+}
+
+function normalizeOnboardingStep(value, fallback = "completed") {
+  const clean = String(value || "").trim().toLowerCase();
+  if (ONBOARDING_STEPS.includes(clean)) {
+    return clean;
+  }
+  return fallback;
+}
+
+function getOnboardingStepIndex(value) {
+  const step = normalizeOnboardingStep(value, "completed");
+  return Math.max(0, ONBOARDING_STEPS.indexOf(step));
+}
+
+function normalizeOnboardingChecklist(value) {
+  const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  return {
+    branding: Boolean(source.branding),
+    templateSetup: Boolean(source.templateSetup),
+    workflowTraining: Boolean(source.workflowTraining)
+  };
+}
+
+function normalizeOnboardingChecklistPatch(value) {
+  const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  const patch = {};
+  ONBOARDING_CHECKLIST_KEYS.forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(source, key)) {
+      patch[key] = Boolean(source[key]);
+    }
+  });
+  return patch;
+}
+
+function isOnboardingChecklistComplete(checklist) {
+  return ONBOARDING_CHECKLIST_KEYS.every((key) => Boolean(checklist?.[key]));
+}
+
+function isAgencyProfileComplete(agencyName, profile) {
+  const data = profile && typeof profile === "object" && !Array.isArray(profile) ? profile : {};
+  const hasAgencyName = Boolean(sanitizeText(agencyName, 120));
+  const hasPhone = Boolean(sanitizeText(data.agencyPhone || "", 80));
+  const email = sanitizeText(data.agencyEmail || "", 160);
+  const hasEmail = Boolean(email && isValidEmail(email));
+  const hasAddress = Boolean(sanitizeText(data.agencyAddress || "", 220));
+  return hasAgencyName && hasPhone && hasEmail && hasAddress;
+}
+
+function normalizeOnboardingState(value) {
+  const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  return {
+    checklist: normalizeOnboardingChecklist(source.checklist || DEFAULT_ONBOARDING_CHECKLIST)
+  };
 }
 
 function currentMonthKey(date = new Date()) {
@@ -299,6 +361,18 @@ function normalizeAgencyRow(row) {
     TEMPLATE_IDS.includes(templateId)
   );
 
+  const profile = row.profile || {};
+  const onboardingState = normalizeOnboardingState(row.onboarding_state);
+  const profileComplete = isAgencyProfileComplete(row.agency_name, profile);
+  let onboardingStep = normalizeOnboardingStep(row.onboarding_step, "completed");
+  if (onboardingStep === "welcome" && profileComplete) {
+    onboardingStep = "checklist";
+  }
+  if (row.onboarding_completed_at) {
+    onboardingStep = "completed";
+  }
+  const checklistComplete = isOnboardingChecklistComplete(onboardingState.checklist);
+
   return {
     id: row.id,
     agencyName: row.agency_name,
@@ -313,7 +387,15 @@ function normalizeAgencyRow(row) {
     paymentReference: row.payment_reference || "",
     paymentNote: row.payment_note || "",
     lastResetMonth: row.last_reset_month || currentMonthKey(),
-    profile: row.profile || {}
+    profile,
+    onboarding: {
+      step: onboardingStep,
+      completed: onboardingStep === "completed",
+      completedAt: row.onboarding_completed_at || null,
+      profileComplete,
+      checklist: onboardingState.checklist,
+      checklistComplete
+    }
   };
 }
 
@@ -796,9 +878,9 @@ function createApp({ cfg, pool, logger, rateLimiterStore }) {
 
       await pool.query(
         `INSERT INTO agencies
-          (id, agency_name, email, password_hash, plan, plan_name, cv_limit, cvs_created, templates, subscription_status, last_reset_month, profile)
+          (id, agency_name, email, password_hash, plan, plan_name, cv_limit, cvs_created, templates, subscription_status, last_reset_month, profile, onboarding_step, onboarding_state)
          VALUES
-          ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11,$12::jsonb)`,
+          ($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10,$11,$12::jsonb,$13,$14::jsonb)`,
         [
           id,
           cleanAgencyName,
@@ -811,7 +893,9 @@ function createApp({ cfg, pool, logger, rateLimiterStore }) {
           JSON.stringify(planConfig.templates),
           "active",
           currentMonthKey(),
-          JSON.stringify({})
+          JSON.stringify({}),
+          "welcome",
+          JSON.stringify({ checklist: DEFAULT_ONBOARDING_CHECKLIST })
         ]
       );
 
@@ -1023,18 +1107,97 @@ function createApp({ cfg, pool, logger, rateLimiterStore }) {
       if (!agencyName) {
         return res.status(400).json({ error: "Agency name is required" });
       }
+      const profileComplete = isAgencyProfileComplete(agencyName, profile);
+      const currentStep = normalizeOnboardingStep(row.onboarding_step, "completed");
+      let nextStep = currentStep;
+      if (currentStep !== "completed") {
+        if (profileComplete && getOnboardingStepIndex(currentStep) < getOnboardingStepIndex("checklist")) {
+          nextStep = "checklist";
+        } else if (!profileComplete && getOnboardingStepIndex(currentStep) < getOnboardingStepIndex("profile")) {
+          nextStep = "profile";
+        }
+      }
+      const nextCompletedAt =
+        nextStep === "completed" ? row.onboarding_completed_at || new Date().toISOString() : null;
 
-      await pool.query("UPDATE agencies SET agency_name = $1, profile = $2::jsonb WHERE id = $3", [
-        agencyName,
-        JSON.stringify(profile),
-        req.agencyId
-      ]);
+      await pool.query(
+        "UPDATE agencies SET agency_name = $1, profile = $2::jsonb, onboarding_step = $3, onboarding_completed_at = $4 WHERE id = $5",
+        [
+          agencyName,
+          JSON.stringify(profile),
+          nextStep,
+          nextCompletedAt,
+          req.agencyId
+        ]
+      );
 
       const updated = normalizeAgencyRow(await findAgencyById(pool, req.agencyId));
       return res.json({ ok: true, agency: updated });
     } catch (error) {
       logger.error("profile_update_failed", { error: error.message, requestId: req.requestId });
       return res.status(500).json({ error: "Profile update failed" });
+    }
+  });
+
+  app.put("/api/onboarding", authRequired, async (req, res) => {
+    try {
+      const row = await findAgencyById(pool, req.agencyId);
+      if (!row) {
+        return res.status(404).json({ error: "Agency not found" });
+      }
+      const body = req.body || {};
+      const currentAgency = normalizeAgencyRow(row);
+      const profileComplete = Boolean(currentAgency.onboarding?.profileComplete);
+      const currentStep = normalizeOnboardingStep(row.onboarding_step, "completed");
+      const checklist = normalizeOnboardingChecklist(row.onboarding_state?.checklist || DEFAULT_ONBOARDING_CHECKLIST);
+      const checklistPatch = normalizeOnboardingChecklistPatch(body.checklist);
+      const nextChecklist = { ...checklist, ...checklistPatch };
+      const requestedStepRaw = body.step === undefined ? "" : sanitizeText(body.step, 32).toLowerCase();
+      const markCompleted = body.markCompleted === true;
+      const hasStepRequest = Boolean(requestedStepRaw);
+
+      if (hasStepRequest && !ONBOARDING_STEPS.includes(requestedStepRaw)) {
+        return res.status(400).json({ error: "Invalid onboarding step." });
+      }
+
+      let nextStep = currentStep;
+      if (hasStepRequest) {
+        const requestedStep = normalizeOnboardingStep(requestedStepRaw, currentStep);
+        if (getOnboardingStepIndex(requestedStep) < getOnboardingStepIndex(currentStep)) {
+          return res.status(400).json({ error: "Onboarding step cannot move backwards." });
+        }
+        nextStep = requestedStep;
+      }
+
+      if (markCompleted) {
+        nextStep = "completed";
+      }
+
+      if (!profileComplete && getOnboardingStepIndex(nextStep) >= getOnboardingStepIndex("checklist")) {
+        return res.status(400).json({ error: "Complete agency profile setup first." });
+      }
+
+      if (nextStep === "completed" && !isOnboardingChecklistComplete(nextChecklist)) {
+        return res.status(400).json({ error: "Complete the onboarding checklist first." });
+      }
+
+      const nextCompletedAt =
+        nextStep === "completed" ? row.onboarding_completed_at || new Date().toISOString() : null;
+
+      await pool.query(
+        `UPDATE agencies
+         SET onboarding_step = $1,
+             onboarding_state = $2::jsonb,
+             onboarding_completed_at = $3
+         WHERE id = $4`,
+        [nextStep, JSON.stringify({ checklist: nextChecklist }), nextCompletedAt, req.agencyId]
+      );
+
+      const agency = normalizeAgencyRow(await findAgencyById(pool, req.agencyId));
+      return res.json({ ok: true, agency });
+    } catch (error) {
+      logger.error("onboarding_update_failed", { error: error.message, requestId: req.requestId });
+      return res.status(500).json({ error: "Failed to update onboarding state." });
     }
   });
 

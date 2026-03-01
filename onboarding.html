@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="gulfcv-api-base" content="/api">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+  <title>Onboarding | GulfCV Pro</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2712%27 fill=%27%230c4a6e%27/%3E%3Ctext x=%2732%27 y=%2741%27 font-size=%2728%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27Arial%27%3EG%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="onboarding.css">
+</head>
+<body>
+  <header class="onboarding-topbar">
+    <div class="onboarding-topbar-inner">
+      <div class="brand">
+        <strong>GulfCV Pro</strong>
+        <span>Agency Setup</span>
+      </div>
+      <nav class="topbar-actions">
+        <button type="button" id="openProfileBtn">Open Profile</button>
+        <button type="button" id="logoutBtn" class="danger">Logout</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="onboarding-shell">
+    <section class="onboarding-panel">
+      <p class="kicker">First-Time Setup</p>
+      <h1 id="onboardingTitle">Loading setup...</h1>
+      <p class="lead" id="onboardingLead">Preparing your agency onboarding steps.</p>
+
+      <ol class="step-track">
+        <li id="stepChipWelcome">Explore App</li>
+        <li id="stepChipProfile">Profile Setup</li>
+        <li id="stepChipChecklist">Launch Checklist</li>
+      </ol>
+
+      <section id="welcomeStep" class="step-view hidden">
+        <div class="spotlight-grid">
+          <article>
+            <h3>Bilingual CV Engine</h3>
+            <p>Create English + Arabic CV outputs with consistent structure and branding.</p>
+          </article>
+          <article>
+            <h3>Agency Branding</h3>
+            <p>Apply agency and FRA logos with your phone, email, socials, and address footer.</p>
+          </article>
+          <article>
+            <h3>Usage Visibility</h3>
+            <p>Track monthly quota and saved records from one workflow.</p>
+          </article>
+        </div>
+        <div class="step-actions">
+          <button type="button" id="welcomeContinueBtn" class="primary">Continue to Profile Setup</button>
+        </div>
+      </section>
+
+      <section id="checklistStep" class="step-view hidden">
+        <p class="checklist-note">Confirm this agency has completed launch essentials before opening the builder.</p>
+        <label class="checklist-item">
+          <input type="checkbox" id="checkBranding">
+          <span>Agency branding is set (name, phone, email, address, logos).</span>
+        </label>
+        <label class="checklist-item">
+          <input type="checkbox" id="checkTemplates">
+          <span>Team reviewed templates, layout options, and translation behavior.</span>
+        </label>
+        <label class="checklist-item">
+          <input type="checkbox" id="checkWorkflow">
+          <span>Team understands save/reset/print workflow for final CV output.</span>
+        </label>
+
+        <div class="step-actions">
+          <button type="button" id="checklistContinueBtn" class="primary" disabled>Open CV Builder</button>
+        </div>
+      </section>
+
+      <p id="onboardingMessage" class="message" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="onboarding-flow.js"></script>
+  <script src="onboarding.js"></script>
+</body>
+</html>

@@ -101,10 +101,49 @@ if (!SHOULD_RUN) {
     });
     assert.equal(signup.response.status, 201);
     assert.equal(signup.data.agency.agencyName, "Integration Agency");
+    assert.equal(signup.data.agency.onboarding.step, "welcome");
+    assert.equal(signup.data.agency.onboarding.completed, false);
 
     const me = await apiRequest(baseUrl, agencyJar, "/auth/me");
     assert.equal(me.response.status, 200);
     assert.equal(me.data.agency.email, "agency.integration@example.com");
+    assert.equal(me.data.agency.onboarding.step, "welcome");
+
+    const moveToProfile = await apiRequest(baseUrl, agencyJar, "/onboarding", {
+      method: "PUT",
+      body: { step: "profile" }
+    });
+    assert.equal(moveToProfile.response.status, 200);
+    assert.equal(moveToProfile.data.agency.onboarding.step, "profile");
+
+    const profileSave = await apiRequest(baseUrl, agencyJar, "/agency/profile", {
+      method: "PUT",
+      body: {
+        agencyName: "Integration Agency",
+        agencyPhone: "+63 912 000 0000",
+        agencyEmail: "agency.integration@example.com",
+        agencyAddress: "Makati City"
+      }
+    });
+    assert.equal(profileSave.response.status, 200);
+    assert.equal(profileSave.data.agency.onboarding.step, "checklist");
+    assert.equal(profileSave.data.agency.onboarding.profileComplete, true);
+
+    const completeOnboarding = await apiRequest(baseUrl, agencyJar, "/onboarding", {
+      method: "PUT",
+      body: {
+        checklist: {
+          branding: true,
+          templateSetup: true,
+          workflowTraining: true
+        },
+        step: "completed",
+        markCompleted: true
+      }
+    });
+    assert.equal(completeOnboarding.response.status, 200);
+    assert.equal(completeOnboarding.data.agency.onboarding.step, "completed");
+    assert.equal(completeOnboarding.data.agency.onboarding.completed, true);
 
     const forgot = await apiRequest(baseUrl, createCookieJar(), "/auth/forgot-password", {
       method: "POST",

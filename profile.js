@@ -1,4 +1,6 @@
 const API_BASE = window.GULFCV_RUNTIME?.apiBase || `/api`;
+const pageParams = new URLSearchParams(window.location.search);
+const isOnboardingProfileMode = pageParams.get("onboarding") === "1";
 
 let agencyCache = null;
 let agencyLogoData = "";
@@ -25,6 +27,10 @@ function setMessage(text, ok = false) {
   const el = document.getElementById("profileMessage");
   el.style.color = ok ? "#11623a" : "#7d1f26";
   el.textContent = text;
+}
+
+function getPostLoginPath(agency) {
+  return window.GULFCV_ONBOARDING?.getNextPathForAgency(agency) || "/dashboard";
 }
 
 function makeLogoPlaceholder(label) {
@@ -81,9 +87,12 @@ function fill(agency) {
   const statusText = String(agency.subscriptionStatus || "unknown")
     .replaceAll("_", " ")
     .replace(/\b\w/g, (m) => m.toUpperCase());
+  const setupStep = String(agency?.onboarding?.step || "completed")
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (m) => m.toUpperCase());
 
   document.getElementById("profileInfo").textContent =
-    `Plan: ${agency.planName} | Usage: ${used}/${limit} | Status: ${statusText}`;
+    `Plan: ${agency.planName} | Usage: ${used}/${limit} | Status: ${statusText} | Setup: ${setupStep}`;
   document.getElementById("metricPlan").textContent = agency.planName || "-";
   document.getElementById("metricUsage").textContent = `${used} / ${limit}`;
   document.getElementById("metricRemaining").textContent = String(remaining);
@@ -116,14 +125,34 @@ function fill(agency) {
   fraLogoData = profile.fraLogo || "";
   setLogoPreview("agencyLogoThumb", agencyLogoData, "PH Logo");
   setLogoPreview("fraLogoThumb", fraLogoData, "FRA Logo");
+
+  const goDashboard = document.getElementById("goDashboard");
+  if (goDashboard) {
+    const nextPath = getPostLoginPath(agency);
+    const pendingSetup = !String(nextPath).startsWith("/dashboard");
+    goDashboard.textContent = pendingSetup ? "Continue Setup" : "Open CV Builder";
+  }
 }
 
 async function loadProfile() {
   try {
     const { agency } = await api("/auth/me");
+    const nextPath = getPostLoginPath(agency);
+    if (String(nextPath).startsWith("/subscription")) {
+      window.location.href = nextPath;
+      return;
+    }
+    if (agency?.onboarding?.step === "welcome") {
+      window.location.href = "/onboarding?step=welcome";
+      return;
+    }
     agencyCache = agency;
     fill(agency);
-  } catch {
+  } catch (error) {
+    if (/session|unauthorized|missing/i.test(error.message || "")) {
+      window.location.href = "/auth?mode=signin";
+      return;
+    }
     window.location.href = "/landing";
   }
 }
@@ -154,6 +183,14 @@ document.getElementById("profileForm").addEventListener("submit", async (event) 
     });
     agencyCache = agency;
     fill(agency);
+    const nextPath = getPostLoginPath(agency);
+    if (isOnboardingProfileMode && !String(nextPath).startsWith("/profile")) {
+      setMessage("Profile saved. Continuing setup...", true);
+      setTimeout(() => {
+        window.location.href = nextPath;
+      }, 320);
+      return;
+    }
     setMessage("Profile saved.", true);
   } catch (error) {
     setMessage(error.message || "Could not save profile.");
@@ -161,7 +198,7 @@ document.getElementById("profileForm").addEventListener("submit", async (event) 
 });
 
 document.getElementById("goDashboard").addEventListener("click", () => {
-  window.location.href = "/dashboard";
+  window.location.href = getPostLoginPath(agencyCache);
 });
 
 document.getElementById("agencyLogoFile")?.addEventListener("change", async (event) => {
