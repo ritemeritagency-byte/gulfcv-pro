@@ -1381,6 +1381,33 @@ body[data-page="landing"] h1 {
   margin-top: 0.7rem;
 }
 
+body[data-page="landing"] .hero-photo-panel {
+  margin: 1.1rem auto 1rem;
+  width: min(760px, 100%);
+  border: 1px solid #d4e0f2;
+  border-radius: 16px;
+  padding: 0.5rem;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 14px 30px rgba(17, 42, 75, 0.12);
+}
+
+body[data-page="landing"] .hero-photo-panel img {
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #d3deef;
+  display: block;
+}
+
+body[data-page="landing"] .hero-photo-panel figcaption {
+  margin-top: 0.45rem;
+  color: var(--landing-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: left;
+}
+
 body[data-page="landing"] .hero-points span {
   border-color: var(--landing-line);
   color: #234067;
@@ -2066,6 +2093,14 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
 
   body[data-page="landing"] .hero-points span {
     width: auto;
+  }
+
+  body[data-page="landing"] .hero-photo-panel {
+    margin-top: 0.9rem;
+  }
+
+  body[data-page="landing"] .hero-photo-panel img {
+    max-height: 220px;
   }
 
   body[data-page="landing"] .footer-spotlight {
