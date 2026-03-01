@@ -68,10 +68,11 @@
       <div id="signedInPanel" class="signed-in-panel hidden" aria-live="polite">
         <p class="signed-in-kicker">Signed In</p>
         <h3 id="signedInAgencyName">Agency Account</h3>
-        <p class="signed-in-note">Your session is active on this device.</p>
+        <p class="signed-in-note" id="signedInNote">Your session is active on this device. Choose where to go next.</p>
         <div class="signed-in-actions">
-          <a class="nav-btn primary" href="/dashboard">Open Dashboard</a>
-          <a class="nav-btn" href="/profile">Agency Profile</a>
+          <a class="nav-btn primary" id="signedInPrimaryLink" href="/dashboard">Open Dashboard</a>
+          <a class="nav-btn" id="signedInProfileLink" href="/profile">Agency Profile</a>
+          <a class="nav-btn" id="signedInDashboardLink" href="/dashboard">CV Portal</a>
           <button type="button" class="nav-btn ghost" id="panelLogoutBtn">Sign Out</button>
         </div>
       </div>

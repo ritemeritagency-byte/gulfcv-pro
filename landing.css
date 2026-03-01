@@ -333,6 +333,69 @@ h1 {
   padding: 1.1rem;
 }
 
+.growth-banner {
+  margin-top: 0.9rem;
+  border: 1px solid #c8d8ef;
+  border-radius: 18px;
+  padding: 1.2rem 1.1rem;
+  background:
+    radial-gradient(140% 170% at 0% 100%, rgba(45, 140, 255, 0.18), transparent 62%),
+    radial-gradient(130% 170% at 100% 0%, rgba(255, 106, 168, 0.15), transparent 68%),
+    linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+  box-shadow: 0 16px 32px rgba(13, 37, 68, 0.1);
+  text-align: center;
+}
+
+.growth-banner h2 {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.6vw, 1.95rem);
+}
+
+.growth-copy {
+  margin: 0.55rem auto 0;
+  max-width: 760px;
+  color: #3f5f89;
+}
+
+.growth-proof {
+  margin-top: 0.85rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.growth-proof article {
+  border: 1px solid #d0ddf0;
+  border-radius: 14px;
+  padding: 0.8rem 0.75rem;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.growth-proof h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.growth-proof p {
+  margin: 0.35rem 0 0;
+  color: #4b6489;
+  font-size: 0.9rem;
+}
+
+.growth-cta-copy {
+  margin: 0.85rem 0 0;
+  font-weight: 700;
+  color: #1f406e;
+}
+
+.growth-cta-row {
+  margin-top: 0.7rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
 .auth-shell {
   max-width: 760px;
   min-height: calc(100vh - 92px);
@@ -1089,8 +1152,10 @@ body[data-page="landing"] .hero-points span {
 
 body[data-page="landing"] .template-gallery,
 body[data-page="landing"] .plans,
+body[data-page="landing"] .growth-banner,
 body[data-page="landing"] .about-inner,
 body[data-page="landing"] .value-grid article,
+body[data-page="landing"] .growth-proof article,
 body[data-page="landing"] .language-head,
 body[data-page="landing"] .language-grid article,
 body[data-page="landing"] .how-grid article {
@@ -1358,6 +1423,9 @@ body[data-page="landing"] .plan-list,
 body[data-page="landing"] .price span,
 body[data-page="landing"] .pricing-footnote,
 body[data-page="landing"] .template-card p,
+body[data-page="landing"] .growth-copy,
+body[data-page="landing"] .growth-proof p,
+body[data-page="landing"] .growth-cta-copy,
 body[data-page="landing"] .about-inner p,
 body[data-page="landing"] .value-grid p,
 body[data-page="landing"] .language-head p,
@@ -1421,24 +1489,19 @@ body[data-page="landing"] .hero-copy {
 body[data-page="landing"] .hero-showcase {
   margin: 0.08rem 0 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
-  gap: 0.62rem;
-}
-
-body[data-page="landing"] .hero-photo-column {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: 0.62rem;
-}
-
-body[data-page="landing"] .hero-photo-mini-grid {
-  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
+  grid-template-areas:
+    "template template applicant"
+    "template template passport"
+    "bodyshot angle template-alt";
+  gap: 0.58rem;
+  align-items: stretch;
 }
 
 body[data-page="landing"] .hero-card {
   margin: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   border: 1px solid #cfddf2;
   border-radius: 14px;
   background: linear-gradient(180deg, #ffffff, #f5f9ff);
@@ -1449,9 +1512,10 @@ body[data-page="landing"] .hero-card {
 body[data-page="landing"] .hero-card img {
   width: 100%;
   height: 100%;
-  min-height: 96px;
-  object-fit: cover;
+  min-height: 140px;
+  object-fit: contain;
   display: block;
+  background: #f6f9ff;
 }
 
 body[data-page="landing"] .hero-card figcaption {
@@ -1464,17 +1528,61 @@ body[data-page="landing"] .hero-card figcaption {
   text-transform: uppercase;
 }
 
+body[data-page="landing"] .hero-template-card {
+  grid-area: template;
+}
+
 body[data-page="landing"] .hero-template-card img {
-  min-height: 430px;
-  object-position: top center;
+  min-height: 426px;
+  object-position: top;
+}
+
+body[data-page="landing"] .hero-applicant-card {
+  grid-area: applicant;
 }
 
 body[data-page="landing"] .hero-applicant-card img {
-  min-height: 316px;
+  min-height: 286px;
+  object-position: top;
 }
 
-body[data-page="landing"] .hero-mini-card img {
-  min-height: 96px;
+body[data-page="landing"] .hero-passport-card {
+  grid-area: passport;
+}
+
+body[data-page="landing"] .hero-passport-card img {
+  min-height: 140px;
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+body[data-page="landing"] .hero-bodyshot-card {
+  grid-area: bodyshot;
+}
+
+body[data-page="landing"] .hero-bodyshot-card img {
+  min-height: 154px;
+  object-fit: cover;
+  object-position: center;
+}
+
+body[data-page="landing"] .hero-angle-card {
+  grid-area: angle;
+}
+
+body[data-page="landing"] .hero-angle-card img {
+  min-height: 154px;
+  object-fit: cover;
+  object-position: center;
+}
+
+body[data-page="landing"] .hero-template-alt-card {
+  grid-area: template-alt;
+}
+
+body[data-page="landing"] .hero-template-alt-card img {
+  min-height: 154px;
+  object-position: top;
 }
 
 body[data-page="landing"] .hero-points {
@@ -1539,6 +1647,7 @@ body[data-page="landing"] .section-head {
 
 body[data-page="landing"] .section-head h2,
 body[data-page="landing"] .language-head h2,
+body[data-page="landing"] .growth-banner h2,
 body[data-page="landing"] .about-inner h2,
 body[data-page="landing"] .how h2 {
   font-size: clamp(1.5rem, 2.9vw, 2.1rem);
@@ -1551,6 +1660,7 @@ body[data-page="landing"] .pricing-note {
 
 body[data-page="landing"] .template-gallery,
 body[data-page="landing"] .plans,
+body[data-page="landing"] .growth-banner,
 body[data-page="landing"] .about-inner,
 body[data-page="landing"] .language-head {
   border-color: var(--landing-line);
@@ -1562,6 +1672,7 @@ body[data-page="landing"] .language-head {
 
 body[data-page="landing"] .template-gallery,
 body[data-page="landing"] .plans,
+body[data-page="landing"] .growth-banner,
 body[data-page="landing"] .about-inner,
 body[data-page="landing"] .language-head,
 body[data-page="landing"] .how {
@@ -1571,6 +1682,7 @@ body[data-page="landing"] .how {
 body[data-page="landing"] .template-grid,
 body[data-page="landing"] .plan-grid,
 body[data-page="landing"] .value-grid,
+body[data-page="landing"] .growth-proof,
 body[data-page="landing"] .language-grid,
 body[data-page="landing"] .how-grid {
   gap: 1rem;
@@ -1579,6 +1691,7 @@ body[data-page="landing"] .how-grid {
 body[data-page="landing"] .template-card,
 body[data-page="landing"] .plan,
 body[data-page="landing"] .value-grid article,
+body[data-page="landing"] .growth-proof article,
 body[data-page="landing"] .language-grid article,
 body[data-page="landing"] .how-grid article {
   border-color: #d3def0;
@@ -1591,6 +1704,7 @@ body[data-page="landing"] .how-grid article {
 body[data-page="landing"] .template-card:hover,
 body[data-page="landing"] .plan:hover,
 body[data-page="landing"] .value-grid article:hover,
+body[data-page="landing"] .growth-proof article:hover,
 body[data-page="landing"] .language-grid article:hover,
 body[data-page="landing"] .how-grid article:hover {
   transform: translateY(-4px);
@@ -1904,6 +2018,7 @@ body[data-page="auth"] form button[type="submit"]:focus-visible {
 body[data-page="landing"] .hero-content,
 body[data-page="landing"] .template-gallery,
 body[data-page="landing"] .plans,
+body[data-page="landing"] .growth-banner,
 body[data-page="landing"] .about-inner,
 body[data-page="landing"] .language-head,
 body[data-page="landing"] .site-footer {
@@ -1911,24 +2026,28 @@ body[data-page="landing"] .site-footer {
 }
 
 body[data-page="landing"] .value-grid article,
+body[data-page="landing"] .growth-proof article,
 body[data-page="landing"] .language-grid article,
 body[data-page="landing"] .how-grid article {
   animation: landingFadeRise 0.55s ease both;
 }
 
 body[data-page="landing"] .value-grid article:nth-child(1),
+body[data-page="landing"] .growth-proof article:nth-child(1),
 body[data-page="landing"] .language-grid article:nth-child(1),
 body[data-page="landing"] .how-grid article:nth-child(1) {
   animation-delay: 0.06s;
 }
 
 body[data-page="landing"] .value-grid article:nth-child(2),
+body[data-page="landing"] .growth-proof article:nth-child(2),
 body[data-page="landing"] .language-grid article:nth-child(2),
 body[data-page="landing"] .how-grid article:nth-child(2) {
   animation-delay: 0.12s;
 }
 
 body[data-page="landing"] .value-grid article:nth-child(3),
+body[data-page="landing"] .growth-proof article:nth-child(3),
 body[data-page="landing"] .language-grid article:nth-child(3),
 body[data-page="landing"] .how-grid article:nth-child(3) {
   animation-delay: 0.18s;
@@ -1941,17 +2060,19 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body[data-page="landing"] .hero-content,
-  body[data-page="landing"] .template-gallery,
-  body[data-page="landing"] .plans,
-  body[data-page="landing"] .about-inner,
-  body[data-page="landing"] .language-head,
-  body[data-page="landing"] .site-footer,
-  body[data-page="landing"] .value-grid article,
-  body[data-page="landing"] .language-grid article,
-  body[data-page="landing"] .how-grid article {
-    animation: none;
-  }
+body[data-page="landing"] .hero-content,
+body[data-page="landing"] .template-gallery,
+body[data-page="landing"] .plans,
+body[data-page="landing"] .growth-banner,
+body[data-page="landing"] .about-inner,
+body[data-page="landing"] .language-head,
+body[data-page="landing"] .site-footer,
+body[data-page="landing"] .value-grid article,
+body[data-page="landing"] .growth-proof article,
+body[data-page="landing"] .language-grid article,
+body[data-page="landing"] .how-grid article {
+  animation: none;
+}
 }
 
 @media (max-width: 960px) {
@@ -2044,6 +2165,10 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
     grid-template-columns: 1fr 1fr;
   }
 
+  .growth-proof {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .language-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -2117,10 +2242,21 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
   }
 
   .value-grid,
+  .growth-proof,
   .how-grid,
   .foot-grid,
   .language-grid {
     grid-template-columns: 1fr;
+  }
+
+  .growth-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .growth-cta-row .nav-btn {
+    width: 100%;
+    text-align: center;
   }
 
   .profile-form-grid {
@@ -2178,7 +2314,12 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
   }
 
   body[data-page="landing"] .hero-showcase {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "template template"
+      "applicant passport"
+      "bodyshot angle"
+      "template-alt template-alt";
   }
 
   body[data-page="landing"] .hero-template-card img {
@@ -2187,6 +2328,13 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
 
   body[data-page="landing"] .hero-applicant-card img {
     min-height: 260px;
+  }
+
+  body[data-page="landing"] .hero-passport-card img,
+  body[data-page="landing"] .hero-bodyshot-card img,
+  body[data-page="landing"] .hero-angle-card img,
+  body[data-page="landing"] .hero-template-alt-card img {
+    min-height: 180px;
   }
 
   body[data-page="landing"] .foot-grid {
@@ -2206,23 +2354,29 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
 
   body[data-page="landing"] .hero-showcase {
     margin-top: 0.9rem;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "template"
+      "applicant"
+      "passport"
+      "bodyshot"
+      "angle"
+      "template-alt";
   }
 
   body[data-page="landing"] .hero-template-card img {
     min-height: 235px;
   }
 
-  body[data-page="landing"] .hero-photo-mini-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  body[data-page="landing"] .hero-applicant-card img {
+    min-height: 230px;
   }
 
-  body[data-page="landing"] .hero-photo-mini-grid .hero-mini-card:last-child {
-    grid-column: span 2;
-  }
-
-  body[data-page="landing"] .hero-applicant-card img,
-  body[data-page="landing"] .hero-mini-card img {
-    min-height: 150px;
+  body[data-page="landing"] .hero-passport-card img,
+  body[data-page="landing"] .hero-bodyshot-card img,
+  body[data-page="landing"] .hero-angle-card img,
+  body[data-page="landing"] .hero-template-alt-card img {
+    min-height: 170px;
   }
 
   body[data-page="landing"] .nav-main a {

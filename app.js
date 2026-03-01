@@ -534,8 +534,13 @@ function applyTranslation(lang) {
   document.querySelectorAll(".paper-head").forEach((head) => {
     const left = head.querySelector("span:not(.ar)");
     const right = head.querySelector(".ar");
-    if (left && right) {
-      right.textContent = t(safeLang, sanitizeText(left.textContent));
+    if (left) {
+      const fallbackTitle = sanitizeText(head.dataset.titleEn || "");
+      const leftTitle = sanitizeText(left.textContent) || fallbackTitle || "Application For Employee";
+      left.textContent = leftTitle;
+      if (right) {
+        right.textContent = t(safeLang, leftTitle);
+      }
     }
   });
 
@@ -1266,10 +1271,13 @@ async function loadCvHistory() {
 
 function applyAgencyDefaults(agency) {
   const profile = agency.profile || {};
+  const safeAgencyName = sanitizeText(agency.agencyName || "") || "AGENCY NAME";
+  const safeAgencyNameAr = sanitizeText(profile.agencyNameAr || "") || "اسم الوكالة";
+  const safeTagline = sanitizeText(profile.agencyTagline || "") || "Professional Recruitment Services";
   const map = {
-    agencyName: agency.agencyName || "",
-    agencyNameAr: profile.agencyNameAr || "",
-    agencyTagline: profile.agencyTagline || "",
+    agencyName: safeAgencyName,
+    agencyNameAr: safeAgencyNameAr,
+    agencyTagline: safeTagline,
     agencyPhone: profile.agencyPhone || "",
     agencyEmail: profile.agencyEmail || "",
     agencyWebsite: profile.agencyWebsite || "",

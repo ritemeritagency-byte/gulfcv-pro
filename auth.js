@@ -29,6 +29,34 @@ function getPostLoginPath(agency) {
   return window.GULFCV_ONBOARDING?.getNextPathForAgency(agency) || "/dashboard";
 }
 
+function updateSignedInPanelLinks(agency) {
+  const note = document.getElementById("signedInNote");
+  const primaryLink = document.getElementById("signedInPrimaryLink");
+  const profileLink = document.getElementById("signedInProfileLink");
+  const dashboardLink = document.getElementById("signedInDashboardLink");
+  if (!note || !primaryLink || !profileLink || !dashboardLink) return;
+
+  const targetPath = getPostLoginPath(agency);
+  const targetText = String(targetPath);
+  const needsSetup = !targetText.startsWith("/dashboard");
+
+  let primaryLabel = "Open CV Portal";
+  let noteText = "Your session is active on this device. Choose where to go next.";
+  if (targetText.startsWith("/subscription")) {
+    primaryLabel = "Open Subscription";
+    noteText = "Your account is signed in. Complete subscription first, or choose another page below.";
+  } else if (needsSetup) {
+    primaryLabel = "Continue Setup";
+    noteText = "Your setup is not finished yet. Continue setup, or choose another page below.";
+  }
+
+  primaryLink.href = targetPath;
+  primaryLink.textContent = primaryLabel;
+  profileLink.href = `/profile${needsSetup ? "?onboarding=1" : ""}`;
+  dashboardLink.classList.toggle("hidden", targetText.startsWith("/dashboard"));
+  note.textContent = noteText;
+}
+
 function setTab(signupMode) {
   const loginTab = document.getElementById("showLogin");
   const signupTab = document.getElementById("showSignup");
@@ -95,6 +123,7 @@ function setAuthView(agency) {
 
   if (agency) {
     agencyName.textContent = agency.agencyName || "Agency Account";
+    updateSignedInPanelLinks(agency);
     signedInPanel.classList.remove("hidden");
     authForms.classList.add("hidden");
     forgotPanel.classList.add("hidden");
@@ -236,10 +265,6 @@ async function refreshAuthState() {
   try {
     const { agency } = await api("/auth/me");
     currentAgency = agency;
-    if (PAGE === "auth") {
-      window.location.href = getPostLoginPath(agency);
-      return;
-    }
     renderNav(agency);
     setAuthView(agency);
   } catch {
@@ -309,11 +334,7 @@ document.getElementById("signupForm")?.addEventListener("submit", async (event) 
     currentAgency = agency;
     renderNav(agency);
     setAuthView(agency);
-    const nextPath = getPostLoginPath(agency);
-    setMessage("Account created. Redirecting...", true);
-    setTimeout(() => {
-      window.location.href = nextPath;
-    }, 500);
+    setMessage("Account created. Choose where you want to continue.", true);
   } catch (error) {
     const msg = (error.message || "").toLowerCase().includes("fetch")
       ? "Cannot reach API. Check backend URL and server status."
@@ -335,7 +356,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async (event) =
     currentAgency = agency;
     renderNav(agency);
     setAuthView(agency);
-    window.location.href = getPostLoginPath(agency);
+    setMessage("Signed in successfully. Choose where you want to go next.", true);
   } catch (error) {
     const msg = (error.message || "").toLowerCase().includes("fetch")
       ? "Cannot reach API. Check backend URL and server status."
