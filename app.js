@@ -358,6 +358,61 @@ const TRANSLATIONS = {
     "Certificate 2": "證書 2",
     "Certificate 3": "證書 3"
   },
+  "zh-sg": {
+    "Agency-ready bilingual (English + Arabic) candidate profile": "机构专用双语（英文 + 中文）候选人档案",
+    "Application For Employee": "雇员申请",
+    "Reference No.": "参考编号",
+    "Post Applied For": "申请职位",
+    "Monthly Salary": "月薪",
+    "Contract Period": "合同期",
+    "NAME": "姓名",
+    "Details Of Applicant": "申请人资料",
+    "Passport Details": "护照资料",
+    Nationality: "国籍",
+    Religion: "宗教",
+    "Date Of Birth": "出生日期",
+    "Place of birth": "出生地",
+    Age: "年龄",
+    "Civil Status": "婚姻状况",
+    "No of Children": "子女人数",
+    Weight: "体重",
+    Height: "身高",
+    "Education Level": "教育程度",
+    "Contact No.": "联系电话",
+    "Knowledge Of Language": "语言能力",
+    English: "英文",
+    Level: "等级",
+    Arabic: "中文",
+    Poor: "较弱",
+    Fair: "一般",
+    Good: "良好",
+    "Very Good": "很好",
+    Fluent: "流利",
+    "Working Experience": "工作经验",
+    Cooking: "烹饪",
+    Cleaning: "清洁",
+    Washing: "洗衣",
+    Ironing: "熨烫",
+    "Baby Sitting": "照顾小孩",
+    Babysitting: "照顾小孩",
+    "Lady Driver": "女司机",
+    "Previous Employment Abroad": "海外工作经验",
+    Emergency: "紧急资料",
+    Country: "国家",
+    Period: "期间",
+    "Contact Person": "紧急联系人",
+    Address: "地址",
+    Number: "护照号码",
+    "Issue Date": "签发日期",
+    Place: "签发地点",
+    "Exp. Date": "到期日期",
+    "Passport Photo (2x2)": "护照相片 (2x2)",
+    "Full Body Photo": "全身相片",
+    "Passport Copy": "护照副本",
+    "Certificate 1": "证书 1",
+    "Certificate 2": "证书 2",
+    "Certificate 3": "证书 3"
+  },
   ms: {
     "Agency-ready bilingual (English + Arabic) candidate profile": "Profil calon dwibahasa (Inggeris + Melayu) sedia agensi",
     "Application For Employee": "Permohonan Pekerja",
@@ -457,6 +512,7 @@ function applyTranslation(lang) {
     const pairLabelMap = {
       ar: "Arabic",
       "zh-hk": "Hong Kong Chinese",
+      "zh-sg": "Mandarin Chinese (Singapore)",
       ms: "Malay (Malaysia)",
       en: "English"
     };
@@ -2161,5 +2217,4 @@ async function init() {
 }
 
 init();
-
 
