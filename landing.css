@@ -600,6 +600,13 @@ h1 {
   font-size: 0.9rem;
 }
 
+.signed-in-prompt {
+  margin: 0.38rem 0 0;
+  color: #183e70;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
 .signed-in-actions {
   margin-top: 0.72rem;
   display: flex;
