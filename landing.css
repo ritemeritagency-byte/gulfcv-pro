@@ -1489,11 +1489,10 @@ body[data-page="landing"] .hero-copy {
 body[data-page="landing"] .hero-showcase {
   margin: 0.08rem 0 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
   grid-template-areas:
-    "template template applicant"
-    "template template passport"
-    "bodyshot angle template-alt";
+    "template applicant"
+    "template passport";
   gap: 0.58rem;
   align-items: stretch;
 }
@@ -1554,35 +1553,6 @@ body[data-page="landing"] .hero-passport-card img {
   min-height: 140px;
   object-fit: cover;
   object-position: center 22%;
-}
-
-body[data-page="landing"] .hero-bodyshot-card {
-  grid-area: bodyshot;
-}
-
-body[data-page="landing"] .hero-bodyshot-card img {
-  min-height: 154px;
-  object-fit: cover;
-  object-position: center;
-}
-
-body[data-page="landing"] .hero-angle-card {
-  grid-area: angle;
-}
-
-body[data-page="landing"] .hero-angle-card img {
-  min-height: 154px;
-  object-fit: cover;
-  object-position: center;
-}
-
-body[data-page="landing"] .hero-template-alt-card {
-  grid-area: template-alt;
-}
-
-body[data-page="landing"] .hero-template-alt-card img {
-  min-height: 154px;
-  object-position: top;
 }
 
 body[data-page="landing"] .hero-points {
@@ -2317,9 +2287,7 @@ body[data-page="landing"] .how-grid article {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
       "template template"
-      "applicant passport"
-      "bodyshot angle"
-      "template-alt template-alt";
+      "applicant passport";
   }
 
   body[data-page="landing"] .hero-template-card img {
@@ -2330,10 +2298,7 @@ body[data-page="landing"] .how-grid article {
     min-height: 260px;
   }
 
-  body[data-page="landing"] .hero-passport-card img,
-  body[data-page="landing"] .hero-bodyshot-card img,
-  body[data-page="landing"] .hero-angle-card img,
-  body[data-page="landing"] .hero-template-alt-card img {
+  body[data-page="landing"] .hero-passport-card img {
     min-height: 180px;
   }
 
@@ -2358,10 +2323,7 @@ body[data-page="landing"] .how-grid article {
     grid-template-areas:
       "template"
       "applicant"
-      "passport"
-      "bodyshot"
-      "angle"
-      "template-alt";
+      "passport";
   }
 
   body[data-page="landing"] .hero-template-card img {
@@ -2372,10 +2334,7 @@ body[data-page="landing"] .how-grid article {
     min-height: 230px;
   }
 
-  body[data-page="landing"] .hero-passport-card img,
-  body[data-page="landing"] .hero-bodyshot-card img,
-  body[data-page="landing"] .hero-angle-card img,
-  body[data-page="landing"] .hero-template-alt-card img {
+  body[data-page="landing"] .hero-passport-card img {
     min-height: 170px;
   }
 
