@@ -619,6 +619,10 @@ h1 {
   gap: 0.55rem;
 }
 
+#authForms.hidden {
+  display: none !important;
+}
+
 .tabs {
   display: flex;
   gap: 0.5rem;
@@ -1549,8 +1553,9 @@ body[data-page="landing"] .hero-applicant-card {
 }
 
 body[data-page="landing"] .hero-applicant-card img {
-  min-height: 430px;
-  object-position: top;
+  min-height: 380px;
+  object-fit: cover;
+  object-position: center 12%;
 }
 
 body[data-page="landing"] .hero-passport-card {
@@ -2303,7 +2308,7 @@ body[data-page="landing"] .how-grid article {
   }
 
   body[data-page="landing"] .hero-applicant-card img {
-    min-height: 420px;
+    min-height: 360px;
   }
 
   body[data-page="landing"] .hero-passport-card img {
@@ -2339,7 +2344,7 @@ body[data-page="landing"] .how-grid article {
   }
 
   body[data-page="landing"] .hero-applicant-card img {
-    min-height: 230px;
+    min-height: 300px;
   }
 
   body[data-page="landing"] .hero-passport-card img {

@@ -2204,15 +2204,20 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
   }
 
   .paper-head {
-    border: 1px solid #93a9cb;
-    background: #dde8f9 !important;
+    border: 1px solid #3f5f98;
+    background-color: #2f4f8f !important;
+    background-image: linear-gradient(120deg, #2b4580 0%, #3d66b8 58%, #5f7ec4 100%) !important;
     box-shadow: none;
-    color: #1a3963 !important;
+    color: #ffffff !important;
+  }
+
+  .paper-head::after {
+    display: none;
   }
 
   .paper-head .ar,
   .paper-head span:not(.ar) {
-    color: #1a3963 !important;
+    color: #ffffff !important;
   }
 
   #cvPreview .agency-footer {
