@@ -988,11 +988,11 @@ body[data-page="landing"] .topbar {
   background: rgba(248, 252, 255, 0.94);
 }
 
-body[data-page="landing"] .brand strong {
+body[data-page="landing"] .brand-copy strong {
   color: var(--landing-ink);
 }
 
-body[data-page="landing"] .brand span {
+body[data-page="landing"] .brand-copy span {
   color: var(--landing-muted);
 }
 
@@ -1229,7 +1229,86 @@ body[data-page="landing"] .topbar {
   background: rgba(251, 253, 255, 0.95);
 }
 
-body[data-page="landing"] .brand strong,
+body[data-page="landing"] .topbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(11, 140, 121, 0.86), rgba(29, 119, 170, 0.8), rgba(245, 159, 58, 0.74));
+  opacity: 0.65;
+}
+
+body[data-page="landing"] .brand {
+  align-items: center;
+  gap: 0.62rem;
+}
+
+body[data-page="landing"] .brand-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #0b8c79, #1d77aa 62%, #f59f3a);
+  box-shadow: 0 10px 20px rgba(10, 31, 55, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.52);
+}
+
+body[data-page="landing"] .brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+}
+
+body[data-page="landing"] .brand-mark-glyph {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-family: "Sora", "IBM Plex Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+body[data-page="landing"] .brand-copy {
+  display: grid;
+  gap: 0.05rem;
+  line-height: 1.02;
+}
+
+body[data-page="landing"] .brand-copy strong {
+  font-size: 1.08rem;
+}
+
+body[data-page="landing"] .brand-copy span {
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+body[data-page="landing"] .brand-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.54rem;
+  border-radius: 999px;
+  border: 1px solid #c9dbf0;
+  background: linear-gradient(135deg, #ffffff, #edf6ff);
+  color: #214368;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.66);
+}
+
+body[data-page="landing"] .brand-copy strong,
 body[data-page="landing"] h1,
 body[data-page="landing"] h2,
 body[data-page="landing"] h3,
@@ -1239,7 +1318,7 @@ body[data-page="landing"] h4 {
   color: var(--landing-ink);
 }
 
-body[data-page="landing"] .brand span,
+body[data-page="landing"] .brand-copy span,
 body[data-page="landing"] .sub,
 body[data-page="landing"] .pricing-note,
 body[data-page="landing"] .about-inner p,
@@ -1750,6 +1829,25 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
   .metric-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+  body[data-page="landing"] .brand-pill {
+    display: none;
+  }
+
+  body[data-page="landing"] .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+
+  body[data-page="landing"] .brand-copy strong {
+    font-size: 1rem;
+  }
+
+  body[data-page="landing"] .brand-copy span {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1814,6 +1912,10 @@ body[data-page="landing"] .how-grid article:nth-child(4) {
   .auth-shell {
     min-height: auto;
     padding-top: 1rem;
+  }
+
+  body[data-page="landing"] .brand-copy span {
+    display: none;
   }
 }
 
