@@ -1496,10 +1496,10 @@ body[data-page="landing"] .hero-copy {
 body[data-page="landing"] .hero-showcase {
   margin: 0.08rem 0 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-areas:
     "template applicant"
-    "template passport";
+    "passport applicant";
   gap: 0.58rem;
   align-items: stretch;
 }
@@ -1539,8 +1539,9 @@ body[data-page="landing"] .hero-template-card {
 }
 
 body[data-page="landing"] .hero-template-card img {
-  min-height: 426px;
-  object-position: top;
+  min-height: 286px;
+  object-fit: cover;
+  object-position: top center;
 }
 
 body[data-page="landing"] .hero-applicant-card {
@@ -1548,7 +1549,7 @@ body[data-page="landing"] .hero-applicant-card {
 }
 
 body[data-page="landing"] .hero-applicant-card img {
-  min-height: 286px;
+  min-height: 430px;
   object-position: top;
 }
 
@@ -1557,7 +1558,7 @@ body[data-page="landing"] .hero-passport-card {
 }
 
 body[data-page="landing"] .hero-passport-card img {
-  min-height: 140px;
+  min-height: 180px;
   object-fit: cover;
   object-position: center 22%;
 }
@@ -2293,20 +2294,20 @@ body[data-page="landing"] .how-grid article {
   body[data-page="landing"] .hero-showcase {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
-      "template template"
-      "applicant passport";
+      "template applicant"
+      "passport applicant";
   }
 
   body[data-page="landing"] .hero-template-card img {
-    min-height: 300px;
-  }
-
-  body[data-page="landing"] .hero-applicant-card img {
     min-height: 260px;
   }
 
+  body[data-page="landing"] .hero-applicant-card img {
+    min-height: 420px;
+  }
+
   body[data-page="landing"] .hero-passport-card img {
-    min-height: 180px;
+    min-height: 165px;
   }
 
   body[data-page="landing"] .foot-grid {
