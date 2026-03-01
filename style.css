@@ -273,8 +273,8 @@ body[data-layout="compact"] .photo-card.full .photo-frame {
   justify-content: center;
   justify-self: end;
   min-width: 210px;
-  background: linear-gradient(180deg, #2f5aa0, #244783);
-  border-color: #3d6294;
+  background: linear-gradient(180deg, var(--brand), var(--brand-2));
+  border-color: var(--brand-2);
   color: #fff;
 }
 
@@ -405,11 +405,12 @@ body[data-layout="compact"] .photo-card.full .photo-frame {
 }
 
 .autofill-btn {
-  background: linear-gradient(180deg, #2f5aa0, #244783);
+  background: linear-gradient(180deg, var(--brand), var(--brand-2));
   color: #fff;
+  border-color: var(--brand-2);
   border-radius: 10px;
   padding: 0.52rem 0.9rem;
-  box-shadow: 0 8px 18px rgba(36, 71, 131, 0.22);
+  box-shadow: 0 8px 18px rgba(19, 37, 67, 0.22);
 }
 
 #autofillStatus {
@@ -806,43 +807,29 @@ button:active {
 }
 
 [data-action="reset"] {
-  background: linear-gradient(180deg, #f6f9ff, #e8eef9);
-  border-color: #c8d6ee;
-  color: #223b61;
+  background: linear-gradient(180deg, #ffffff, var(--accent-soft));
+  border-color: var(--line);
+  color: var(--brand-2);
 }
 
 [data-action="print"] {
-  background: linear-gradient(180deg, #1d4f94, #163f76);
-  border-color: #244f8a;
+  background: linear-gradient(180deg, var(--brand), var(--brand-2));
+  border-color: var(--brand-2);
   color: #fff;
 }
 
-[data-action="create-cv"] {
-  background: #0f7b68;
-  color: #fff;
-}
-
-[data-action="profile"] {
-  background: linear-gradient(180deg, #33598e, #26456d);
-  border-color: #3d6294;
-  color: #fff;
-}
-
-[data-action="save-record"] {
-  background: linear-gradient(180deg, #1d8a62, #156a4b);
-  border-color: #2c8f6e;
-  color: #fff;
-}
-
+[data-action="create-cv"],
+[data-action="profile"],
+[data-action="save-record"],
 [data-action="history"] {
-  background: linear-gradient(180deg, #3a69a7, #2d4f7f);
-  border-color: #4a75ab;
+  background: linear-gradient(180deg, var(--brand), var(--brand-2));
+  border-color: var(--brand-2);
   color: #fff;
 }
 
 [data-action="logout"] {
-  background: linear-gradient(180deg, #a02a39, #7f1f2b);
-  border-color: #9f4152;
+  background: linear-gradient(180deg, var(--brand-2), var(--brand));
+  border-color: var(--brand-2);
   color: #fff;
 }
 
@@ -1656,41 +1643,79 @@ body[data-layout="ph-local"] #cvPreview .ph-certification-list {
 }
 
 .agency-footer {
+  position: relative;
+  overflow: hidden;
   margin-top: 8px;
-  border: 1px solid #111;
-  padding: 6px 8px;
+  border: 1px solid #c3d0e6;
+  border-radius: 10px;
+  padding: 7px 8px 6px;
   display: grid;
-  gap: 5px;
+  gap: 4px;
+  background:
+    radial-gradient(140% 140% at 100% 0%, rgba(53, 88, 149, 0.1), transparent 62%),
+    linear-gradient(180deg, #f9fbff 0%, #f2f6ff 100%);
+}
+
+.agency-footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  opacity: 0.9;
+}
+
+.supporting-page .agency-footer {
+  margin-top: 6px;
+  padding-top: 6px;
+  padding-bottom: 5px;
 }
 
 .footer-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-  font-size: 11px;
+  gap: 6px;
+  font-size: 10.5px;
   font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-row + .footer-row {
+  border-top: 1px dashed #cfdaf0;
+  padding-top: 4px;
 }
 
 .footer-row span {
   display: inline-flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 6px;
+  min-height: 20px;
+  padding: 2px 5px;
+  border-radius: 8px;
+  border: 1px solid #d6e0f1;
+  background: rgba(255, 255, 255, 0.82);
+  color: #2a3f63;
+  line-height: 1.2;
 }
 
 .footer-row span::before {
   content: "";
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #8fa2bd;
+  border: 1px solid #a9bbd9;
+  background: var(--accent-soft);
   border-radius: 999px;
-  color: #3b5475;
+  color: var(--brand-2);
   font-size: 9px;
   line-height: 1;
-  flex: 0 0 14px;
-  margin-top: 1px;
+  flex: 0 0 15px;
+  margin-top: 0;
 }
 
 .footer-row span[id*="AgencyPhone"]::before {
